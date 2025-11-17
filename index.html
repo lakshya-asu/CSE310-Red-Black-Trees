@@ -1,0 +1,2334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red-Black Trees - Interactive Presentation</title>
+    <style>
+        :root {
+            --color-white: rgba(255, 255, 255, 1);
+            --color-black: rgba(0, 0, 0, 1);
+            --color-cream-50: rgba(252, 252, 249, 1);
+            --color-cream-100: rgba(255, 255, 253, 1);
+            --color-gray-200: rgba(245, 245, 245, 1);
+            --color-gray-300: rgba(167, 169, 169, 1);
+            --color-gray-400: rgba(119, 124, 124, 1);
+            --color-slate-500: rgba(98, 108, 113, 1);
+            --color-brown-600: rgba(94, 82, 64, 1);
+            --color-charcoal-700: rgba(31, 33, 33, 1);
+            --color-charcoal-800: rgba(38, 40, 40, 1);
+            --color-slate-900: rgba(19, 52, 59, 1);
+            --color-teal-300: rgba(50, 184, 198, 1);
+            --color-teal-400: rgba(45, 166, 178, 1);
+            --color-teal-500: rgba(33, 128, 141, 1);
+            --color-teal-600: rgba(29, 116, 128, 1);
+            --color-teal-700: rgba(26, 104, 115, 1);
+            --color-red-400: rgba(255, 84, 89, 1);
+            --color-red-500: rgba(192, 21, 47, 1);
+            --color-orange-400: rgba(230, 129, 97, 1);
+            --color-orange-500: rgba(168, 75, 47, 1);
+            --color-brown-600-rgb: 94, 82, 64;
+            --color-teal-500-rgb: 33, 128, 141;
+            --color-slate-900-rgb: 19, 52, 59;
+            --color-slate-500-rgb: 98, 108, 113;
+            --color-background: var(--color-cream-50);
+            --color-surface: var(--color-cream-100);
+            --color-text: var(--color-slate-900);
+            --color-text-secondary: var(--color-slate-500);
+            --color-primary: var(--color-teal-500);
+            --color-primary-hover: var(--color-teal-600);
+            --color-primary-active: var(--color-teal-700);
+            --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+            --font-family-base: "FKGroteskNeue", "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-family-mono: "Berkeley Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            --font-size-base: 14px;
+            --font-size-lg: 16px;
+            --font-size-xl: 18px;
+            --font-size-2xl: 20px;
+            --font-size-3xl: 24px;
+            --font-size-4xl: 30px;
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 550;
+            --font-weight-bold: 600;
+            --line-height-normal: 1.5;
+            --line-height-tight: 1.2;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --space-32: 32px;
+            --radius-base: 8px;
+            --radius-lg: 12px;
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            --duration-normal: 250ms;
+            --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-gray-400-rgb: 119, 124, 124;
+                --color-teal-300-rgb: 50, 184, 198;
+                --color-gray-300-rgb: 167, 169, 169;
+                --color-gray-200-rgb: 245, 245, 245;
+                --color-background: var(--color-charcoal-700);
+                --color-surface: var(--color-charcoal-800);
+                --color-text: var(--color-gray-200);
+                --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
+                --color-primary: var(--color-teal-300);
+                --color-primary-hover: var(--color-teal-400);
+                --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
+                --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
+                --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+                --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
+            }
+        }
+
+        @font-face {
+            font-family: 'FKGroteskNeue';
+            src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2') format('woff2');
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: var(--line-height-normal);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .presentation-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-32);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide {
+            display: none;
+            background-color: var(--color-surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-card-border);
+            padding: var(--space-32);
+            box-shadow: var(--shadow-md);
+            flex-grow: 1;
+            min-height: 600px;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        .slide-title {
+            font-size: var(--font-size-4xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-16);
+            color: var(--color-text);
+            line-height: var(--line-height-tight);
+        }
+
+        .slide-subtitle {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-primary);
+            margin-bottom: var(--space-24);
+        }
+
+        .slide-content {
+            font-size: var(--font-size-lg);
+            line-height: 1.7;
+            color: var(--color-text);
+            margin-bottom: var(--space-24);
+        }
+
+        .key-point {
+            background-color: var(--color-secondary);
+            border-left: 4px solid var(--color-primary);
+            padding: var(--space-16);
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-lg);
+            margin-top: var(--space-24);
+        }
+
+        .properties-list {
+            list-style: none;
+            margin: var(--space-24) 0;
+        }
+
+        .properties-list li {
+            background-color: var(--color-secondary);
+            padding: var(--space-16);
+            margin-bottom: var(--space-12);
+            border-radius: var(--radius-base);
+            border-left: 4px solid var(--color-primary);
+            font-size: var(--font-size-lg);
+        }
+
+        .properties-list li:before {
+            content: "✓ ";
+            color: var(--color-primary);
+            font-weight: var(--font-weight-bold);
+            margin-right: var(--space-8);
+        }
+
+        .tree-container {
+            margin: var(--space-32) 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+        }
+
+        .tree-svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .node-red {
+            fill: #dc2626;
+            stroke: #991b1b;
+            stroke-width: 2;
+        }
+
+        .node-black {
+            fill: #1f2937;
+            stroke: #111827;
+            stroke-width: 2;
+        }
+
+        .node-text {
+            fill: white;
+            font-size: 16px;
+            font-weight: var(--font-weight-bold);
+            text-anchor: middle;
+            dominant-baseline: middle;
+        }
+
+        .tree-line {
+            stroke: var(--color-text-secondary);
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .rotation-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: var(--space-24);
+            align-items: center;
+            margin: var(--space-32) 0;
+        }
+
+        .rotation-arrow {
+            font-size: var(--font-size-4xl);
+            color: var(--color-primary);
+            font-weight: var(--font-weight-bold);
+        }
+
+        .steps-list {
+            list-style: none;
+            counter-reset: step-counter;
+            margin: var(--space-24) 0;
+        }
+
+        .steps-list li {
+            counter-increment: step-counter;
+            padding: var(--space-16);
+            margin-bottom: var(--space-12);
+            border-radius: var(--radius-base);
+            background-color: var(--color-secondary);
+            font-size: var(--font-size-lg);
+        }
+
+        .steps-list li:before {
+            content: counter(step-counter);
+            background-color: var(--color-primary);
+            color: white;
+            font-weight: var(--font-weight-bold);
+            padding: var(--space-8) var(--space-12);
+            border-radius: 50%;
+            margin-right: var(--space-12);
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            text-align: center;
+            line-height: 16px;
+        }
+
+        .case-box {
+            background-color: var(--color-secondary);
+            border: 2px solid var(--color-primary);
+            border-radius: var(--radius-base);
+            padding: var(--space-20);
+            margin: var(--space-24) 0;
+        }
+
+        .case-box h3 {
+            color: var(--color-primary);
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--space-12);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .case-box p {
+            font-size: var(--font-size-lg);
+            line-height: 1.6;
+            margin-bottom: var(--space-12);
+        }
+
+        .complexity-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--space-24) 0;
+            font-size: var(--font-size-lg);
+        }
+
+        .complexity-table th,
+        .complexity-table td {
+            padding: var(--space-16);
+            text-align: left;
+            border: 1px solid var(--color-border);
+        }
+
+        .complexity-table th {
+            background-color: var(--color-primary);
+            color: white;
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .complexity-table tr:nth-child(even) {
+            background-color: var(--color-secondary);
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: var(--space-32);
+            gap: var(--space-16);
+        }
+
+        .nav-button {
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            padding: var(--space-12) var(--space-24);
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-medium);
+            cursor: pointer;
+            transition: background-color var(--duration-normal) var(--ease-standard);
+            font-family: var(--font-family-base);
+        }
+
+        .nav-button:hover {
+            background-color: var(--color-primary-hover);
+        }
+
+        .nav-button:active {
+            background-color: var(--color-primary-active);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            font-size: var(--font-size-lg);
+            color: var(--color-text-secondary);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .title-slide {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: 600px;
+        }
+
+        .title-slide .slide-title {
+            font-size: 48px;
+            margin-bottom: var(--space-24);
+        }
+
+        .title-slide .slide-subtitle {
+            font-size: var(--font-size-3xl);
+        }
+
+        .code-block {
+            background-color: var(--color-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            padding: var(--space-16);
+            font-family: var(--font-family-mono);
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: var(--space-16) 0;
+            white-space: pre;
+        }
+
+        .code-header {
+            background-color: var(--color-primary);
+            color: white;
+            padding: var(--space-8) var(--space-16);
+            border-radius: var(--radius-base) var(--radius-base) 0 0;
+            font-weight: var(--font-weight-semibold);
+            font-size: var(--font-size-base);
+            margin-bottom: 0;
+        }
+
+        .code-block + .code-block {
+            margin-top: var(--space-24);
+        }
+
+        .split-view {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-16);
+            margin: var(--space-24) 0;
+        }
+
+        .source-citation {
+            background-color: var(--color-secondary);
+            border-left: 3px solid var(--color-primary);
+            padding: var(--space-12);
+            margin-top: var(--space-24);
+            font-size: var(--font-size-base);
+            font-style: italic;
+        }
+
+        .lemma-box {
+            background-color: var(--color-secondary);
+            border: 2px solid var(--color-primary);
+            border-radius: var(--radius-base);
+            padding: var(--space-20);
+            margin: var(--space-16) 0;
+        }
+
+        .lemma-box h4 {
+            color: var(--color-primary);
+            margin-bottom: var(--space-12);
+            font-size: var(--font-size-xl);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-16);
+            margin: var(--space-24) 0;
+        }
+
+        .comparison-card {
+            background-color: var(--color-secondary);
+            padding: var(--space-16);
+            border-radius: var(--radius-base);
+            border-top: 4px solid var(--color-primary);
+            text-align: center;
+        }
+
+        .comparison-card h4 {
+            color: var(--color-primary);
+            margin-bottom: var(--space-12);
+            font-size: var(--font-size-lg);
+        }
+
+        .applications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-16);
+            margin: var(--space-24) 0;
+        }
+
+        .application-card {
+            background-color: var(--color-secondary);
+            padding: var(--space-20);
+            border-radius: var(--radius-base);
+            border-left: 4px solid var(--color-primary);
+            font-size: var(--font-size-lg);
+        }
+
+        .highlight-box {
+            background-color: var(--color-secondary);
+            border: 2px dashed var(--color-primary);
+            padding: var(--space-20);
+            border-radius: var(--radius-base);
+            margin: var(--space-24) 0;
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .example-sequence {
+            display: flex;
+            gap: var(--space-16);
+            overflow-x: auto;
+            padding: var(--space-16) 0;
+            margin: var(--space-24) 0;
+        }
+
+        .example-step {
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .example-step-title {
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-primary);
+            margin-bottom: var(--space-8);
+            font-size: var(--font-size-lg);
+        }
+
+        .nil-node {
+            fill: #6b7280;
+            stroke: #4b5563;
+            stroke-width: 2;
+        }
+
+        .step-indicator {
+            display: inline-block;
+            background-color: var(--color-primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-semibold);
+            margin-right: var(--space-8);
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active" data-slide="1">
+            <div class="title-slide">
+                <h1 class="slide-title">Red-Black Trees: A Deep Dive</h1>
+                <p class="slide-subtitle">Complete Implementation and Analysis</p>
+                <p class="slide-content" style="font-size: var(--font-size-2xl); margin-top: var(--space-24);">CSE310 Advanced Data Structures Recitation</p>
+                <p class="slide-content" style="margin-top: var(--space-32); font-size: var(--font-size-lg);">Comprehensive coverage with CLRS pseudocode and C++ implementations</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Motivation -->
+        <div class="slide" data-slide="2">
+            <h1 class="slide-title">Motivation - Why Red-Black Trees?</h1>
+            <p class="slide-content"><strong>Problem:</strong> Unbalanced Binary Search Trees can degrade to O(n) height, making operations inefficient.</p>
+            <p class="slide-content"><strong>Solution:</strong> Red-Black Trees guarantee O(log n) height for all operations through color-based balancing constraints.</p>
+            
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h4>BST (Unbalanced)</h4>
+                    <p>Height: O(n)</p>
+                    <p>Insert: O(n)</p>
+                    <p>Delete: O(n)</p>
+                    <p style="color: var(--color-red-500); margin-top: var(--space-8);">⚠️ Worst Case</p>
+                </div>
+                <div class="comparison-card">
+                    <h4>AVL Tree</h4>
+                    <p>Height: O(log n)</p>
+                    <p>Insert: O(log n) rotations</p>
+                    <p>Delete: O(log n) rotations</p>
+                    <p style="color: var(--color-text-secondary); margin-top: var(--space-8);">More rotations</p>
+                </div>
+                <div class="comparison-card" style="border-top-color: var(--color-primary); border-top-width: 6px;">
+                    <h4>RB Tree</h4>
+                    <p>Height: O(log n)</p>
+                    <p>Insert: O(1) rotations</p>
+                    <p>Delete: O(1) rotations</p>
+                    <p style="color: var(--color-primary); margin-top: var(--space-8);">✓ Optimal</p>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <strong>Real-world uses:</strong> Java TreeMap/TreeSet, C++ std::map/set, Linux kernel CFS scheduler
+            </div>
+            <div class="key-point">
+                <strong>Key Insight:</strong> Colors enforce balance constraints that guarantee the tree never becomes too unbalanced, ensuring O(log n) operations.
+            </div>
+        </div>
+
+        <!-- Slide 3: What are Red-Black Trees? -->
+        <div class="slide" data-slide="2">
+            <h1 class="slide-title">What are Red-Black Trees?</h1>
+            <p class="slide-content">A Binary Search Tree where each node is colored either <strong style="color: #dc2626;">RED</strong> or <strong>BLACK</strong>. These colors enforce constraints that automatically maintain balance.</p>
+            <div class="key-point">
+                <strong>Key Insight:</strong> Unlike unbalanced BSTs that degrade to O(n), RB trees guarantee O(log n) operations
+            </div>
+            <div class="tree-container">
+                <svg class="tree-svg" width="400" height="250" viewBox="0 0 400 250">
+                    <!-- Balanced RB Tree -->
+                    <text x="80" y="20" style="fill: var(--color-text); font-size: 14px; font-weight: bold;">Red-Black Tree</text>
+                    <line x1="80" y1="60" x2="40" y2="100" class="tree-line"/>
+                    <line x1="80" y1="60" x2="120" y2="100" class="tree-line"/>
+                    <circle cx="80" cy="60" r="20" class="node-black"/>
+                    <text x="80" y="60" class="node-text">10</text>
+                    <circle cx="40" cy="100" r="20" class="node-red"/>
+                    <text x="40" y="100" class="node-text">5</text>
+                    <circle cx="120" cy="100" r="20" class="node-red"/>
+                    <text x="120" y="100" class="node-text">15</text>
+                    
+                    <!-- Unbalanced BST -->
+                    <text x="280" y="20" style="fill: var(--color-text); font-size: 14px; font-weight: bold;">Unbalanced BST</text>
+                    <line x1="320" y1="60" x2="320" y2="100" class="tree-line"/>
+                    <line x1="320" y1="100" x2="320" y2="140" class="tree-line"/>
+                    <circle cx="320" cy="60" r="20" class="node-black"/>
+                    <text x="320" y="60" class="node-text">5</text>
+                    <circle cx="320" cy="100" r="20" class="node-black"/>
+                    <text x="320" y="100" class="node-text">10</text>
+                    <circle cx="320" cy="140" r="20" class="node-black"/>
+                    <text x="320" y="140" class="node-text">15</text>
+                    
+                    <text x="50" y="180" style="fill: var(--color-primary); font-size: 13px; font-weight: bold;">Height: O(log n)</text>
+                    <text x="270" y="180" style="fill: var(--color-red-500); font-size: 13px; font-weight: bold;">Height: O(n)</text>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Slide 3: RB Tree Definition -->
+        <div class="slide" data-slide="3">
+            <h1 class="slide-title">Red-Black Tree Definition</h1>
+            <p class="slide-content" style="font-size: var(--font-size-xl); line-height: 1.8;">
+                A Red-Black Tree is a <strong>Binary Search Tree</strong> with an additional color attribute (RED or BLACK) on each node that enforces specific structural properties. These properties guarantee the tree maintains <strong>O(log n) height</strong>.
+            </p>
+            
+            <div class="lemma-box">
+                <h4>Formal Definition</h4>
+                <p>A red-black tree is a binary search tree where each node contains an extra bit for denoting the color (red or black), used to ensure the tree remains approximately balanced during insertions and deletions.</p>
+            </div>
+            
+            <div class="key-point">
+                <strong>Historical Note:</strong> Red-Black trees were invented by Rudolf Bayer in 1972 and formalized by Leonidas J. Guibas and Robert Sedgewick in 1978. The name comes from the two colors used to mark nodes.
+            </div>
+            
+            <div class="tree-container">
+                <svg class="tree-svg" width="400" height="250" viewBox="0 0 400 250">
+                    <text x="200" y="20" style="fill: var(--color-text); font-size: 14px; font-weight: bold; text-anchor: middle;">Example Red-Black Tree</text>
+                    <line x1="200" y1="60" x2="130" y2="100" class="tree-line"/>
+                    <line x1="200" y1="60" x2="270" y2="100" class="tree-line"/>
+                    <line x1="130" y1="100" x2="90" y2="140" class="tree-line"/>
+                    <line x1="130" y1="100" x2="170" y2="140" class="tree-line"/>
+                    
+                    <circle cx="200" cy="60" r="25" class="node-black"/>
+                    <text x="200" y="60" class="node-text">20</text>
+                    
+                    <circle cx="130" cy="100" r="25" class="node-red"/>
+                    <text x="130" y="100" class="node-text">10</text>
+                    
+                    <circle cx="270" cy="100" r="25" class="node-black"/>
+                    <text x="270" y="100" class="node-text">30</text>
+                    
+                    <circle cx="90" cy="140" r="20" class="node-black"/>
+                    <text x="90" y="140" class="node-text" style="font-size: 14px;">5</text>
+                    
+                    <circle cx="170" cy="140" r="20" class="node-black"/>
+                    <text x="170" y="140" class="node-text" style="font-size: 14px;">15</text>
+                    
+                    <text x="200" y="210" style="fill: var(--color-primary); font-size: 13px; text-anchor: middle;">Root is BLACK, no consecutive REDs, balanced black-height</text>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Slide 4: The 5 Properties (Detailed) -->
+        <div class="slide" data-slide="4">
+            <h1 class="slide-title">The 5 Red-Black Tree Properties (Detailed)</h1>
+            <ul class="properties-list">
+                <li><strong>Property 1:</strong> Every node is colored RED or BLACK</li>
+                <li><strong>Property 2:</strong> The root is always BLACK</li>
+                <li><strong>Property 3:</strong> All leaves (NIL nodes) are BLACK</li>
+                <li><strong>Property 4:</strong> If a node is RED, then both its children are BLACK
+                    <br><span style="margin-left: var(--space-32); font-size: var(--font-size-base);">→ No two consecutive RED nodes allowed on any path</span>
+                </li>
+                <li><strong>Property 5:</strong> For each node, all simple paths from it to descendant leaves contain the same number of BLACK nodes
+                    <br><span style="margin-left: var(--space-32); font-size: var(--font-size-base);">→ This is the "black-height" property, denoted bh(x)</span>
+                </li>
+            </ul>
+            <div class="tree-container">
+                <svg class="tree-svg" width="500" height="280" viewBox="0 0 500 280">
+                    <line x1="250" y1="60" x2="150" y2="120" class="tree-line"/>
+                    <line x1="250" y1="60" x2="350" y2="120" class="tree-line"/>
+                    <line x1="150" y1="120" x2="100" y2="180" class="tree-line"/>
+                    <line x1="150" y1="120" x2="200" y2="180" class="tree-line"/>
+                    <line x1="350" y1="120" x2="300" y2="180" class="tree-line"/>
+                    <line x1="350" y1="120" x2="400" y2="180" class="tree-line"/>
+                    
+                    <circle cx="250" cy="60" r="25" class="node-black"/>
+                    <text x="250" y="60" class="node-text">13</text>
+                    
+                    <circle cx="150" cy="120" r="25" class="node-red"/>
+                    <text x="150" y="120" class="node-text">8</text>
+                    
+                    <circle cx="350" cy="120" r="25" class="node-red"/>
+                    <text x="350" y="120" class="node-text">17</text>
+                    
+                    <circle cx="100" cy="180" r="25" class="node-black"/>
+                    <text x="100" y="180" class="node-text">1</text>
+                    
+                    <circle cx="200" cy="180" r="25" class="node-black"/>
+                    <text x="200" y="180" class="node-text">11</text>
+                    
+                    <circle cx="300" cy="180" r="25" class="node-black"/>
+                    <text x="300" y="180" class="node-text">15</text>
+                    
+                    <circle cx="400" cy="180" r="25" class="node-black"/>
+                    <text x="400" y="180" class="node-text">25</text>
+                    
+                    <text x="150" y="250" style="fill: var(--color-primary); font-size: 14px; text-anchor: middle;">Valid RB Tree - All properties satisfied</text>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Slide 5: Why Properties Guarantee O(log n) -->
+        <div class="slide" data-slide="5">
+            <h1 class="slide-title">Why These Properties Guarantee O(log n)?</h1>
+            <p class="slide-content"><strong>Mathematical Proof:</strong></p>
+            
+            <div class="lemma-box">
+                <h4>Lemma: Subtree Size by Black-Height</h4>
+                <p>A subtree rooted at any node x contains at least 2<sup>bh(x)</sup> - 1 internal nodes, where bh(x) is the black-height of x.</p>
+                <p style="margin-top: var(--space-12); font-weight: var(--font-weight-semibold);">Proof: By induction on height of x.</p>
+            </div>
+            
+            <ul class="steps-list">
+                <li><strong>Property 4 prevents chains:</strong> No path can have more than h/2 red nodes (since reds can't be consecutive)</li>
+                <li><strong>Property 5 ensures balance:</strong> All paths have the same number of black nodes</li>
+                <li><strong>Result:</strong> Longest path ≤ 2 × shortest path</li>
+                <li><strong>Corollary:</strong> For a tree with n nodes, height h ≤ 2·lg(n+1)</li>
+            </ul>
+            
+            <div class="highlight-box">
+                <strong>Therefore:</strong> Search, Insert, and Delete all run in <strong>O(log n)</strong> time!<br>
+                The tree height is guaranteed to be logarithmic, ensuring efficient operations.
+            </div>
+            
+            <div class="source-citation">
+                Source: Cormen, Leiserson, Rivest, Stein - "Introduction to Algorithms" (CLRS), Chapter 13
+            </div>
+        </div>
+
+        <!-- Slide 6: Node Structure in C++ -->
+        <div class="slide" data-slide="13">
+            <h1 class="slide-title">Node Structure in C++</h1>
+            <p class="slide-content">Complete C++ struct definition for a Red-Black Tree node:</p>
+            
+            <div class="code-header">C++ Node Structure</div>
+            <div class="code-block">struct Node {
+    int key;                    // Data/key value
+    Node* parent;               // Pointer to parent node
+    Node* left;                 // Pointer to left child
+    Node* right;                // Pointer to right child
+    int color;                  // RED (1) or BLACK (0)
+    
+    // Constructor
+    Node(int k) : key(k), parent(nullptr), 
+                  left(nullptr), right(nullptr), 
+                  color(1) {}  // New nodes are RED by default
+};
+
+enum Color { BLACK = 0, RED = 1 };</div>
+            
+            <div class="key-point">
+                <strong>Why we need a parent pointer:</strong>
+                <ul style="margin-top: var(--space-8); list-style-position: inside;">
+                    <li>Required for rotations - must update parent's child pointers</li>
+                    <li>Essential for fixup operations that walk up the tree</li>
+                    <li>Allows traversal in both directions</li>
+                </ul>
+            </div>
+            
+            <div class="source-citation">
+                Reference: <a href="https://www.programiz.com/dsa/red-black-tree" target="_blank" style="color: var(--color-primary);">Programiz - Red-Black Tree Data Structure</a>
+            </div>
+        </div>
+
+        <!-- Slide 7: Sentinel NIL Node -->
+        <div class="slide" data-slide="17">
+            <h1 class="slide-title">Sentinel NIL Node</h1>
+            <p class="slide-content"><strong>Problem:</strong> Boundary conditions with null pointers make code complex and error-prone.</p>
+            <p class="slide-content"><strong>Solution:</strong> Use a single sentinel T.nil to represent all NULL values.</p>
+            
+            <div class="lemma-box">
+                <h4>Sentinel Node Properties</h4>
+                <ul class="properties-list" style="font-size: var(--font-size-base);">
+                    <li>All leaf pointers point to T.nil (instead of nullptr)</li>
+                    <li>Root's parent points to T.nil</li>
+                    <li>T.nil is colored BLACK (satisfies Property 3)</li>
+                    <li>Single sentinel shared by all leaves</li>
+                </ul>
+            </div>
+            
+            <div class="code-header">C++ Implementation with Sentinel</div>
+            <div class="code-block">class RedBlackTree {
+private:
+    Node* root;
+    Node* TNULL;  // The sentinel NIL node
+    
+public:
+    RedBlackTree() {
+        TNULL = new Node(0);
+        TNULL->color = BLACK;
+        TNULL->left = nullptr;
+        TNULL->right = nullptr;
+        TNULL->parent = nullptr;
+        root = TNULL;  // Empty tree: root points to TNULL
+    }
+};</div>
+            
+            <div class="highlight-box">
+                <strong>Benefits:</strong><br>
+                • Simplifies code - avoids null checks in many places<br>
+                • Memory efficient - one sentinel vs many null nodes<br>
+                • Uniform treatment of leaves
+            </div>
+        </div>
+
+        <!-- Slide 8: Tree Class Constructor -->
+        <div class="slide" data-slide="18">
+            <h1 class="slide-title">Complete Tree Class Structure</h1>
+            <p class="slide-content">Full C++ class declaration with all methods:</p>
+            
+            <div class="code-header">Complete RedBlackTree Class</div>
+            <div class="code-block">class RedBlackTree {
+private:
+    Node* root;
+    Node* TNULL;  // Sentinel NIL node
+    
+    // Private helper methods
+    void leftRotate(Node* x);
+    void rightRotate(Node* x);
+    void insertFix(Node* k);
+    void deleteFix(Node* x);
+    void rbTransplant(Node* u, Node* v);
+    Node* minimum(Node* node);
+    
+public:
+    RedBlackTree();
+    void insert(int key);
+    void deleteNode(int key);
+    Node* search(int key);
+    void inorderTraversal();
+};</div>
+            
+            <div class="key-point">
+                <strong>Design Pattern:</strong> Private helper methods (rotations, fixups) are internal operations. Public methods provide the interface for insertion, deletion, and search.
+            </div>
+            
+            <div class="source-citation">
+                Reference: <a href="https://www.programiz.com/dsa/red-black-tree" target="_blank" style="color: var(--color-primary);">Programiz - Red-Black Tree Implementation</a>
+            </div>
+        </div>
+
+        <!-- Slide 9: What are Rotations -->
+        <div class="slide" data-slide="4">
+            <h1 class="slide-title">Why These Properties Matter</h1>
+            <p class="slide-content"><strong>Property 4</strong> prevents long chains - no chain of 3 nodes is possible without violating the RB constraints. <strong>Property 5</strong> ensures the tree doesn't become skewed.</p>
+            <div class="highlight-box">
+                Together, they guarantee height ≤ 2·lg(n+1), giving us <strong>O(log n) operations</strong>
+            </div>
+            <div class="case-box">
+                <h3>Mathematical Guarantee</h3>
+                <p>• Shortest path from root to leaf: Contains only black nodes</p>
+                <p>• Longest path from root to leaf: Alternates red and black nodes</p>
+                <p>• Since all paths have same # of black nodes (Property 5), longest path ≤ 2 × shortest path</p>
+                <p>• Result: The tree is approximately balanced with height ≤ 2·lg(n+1)</p>
+            </div>
+        </div>
+
+        <!-- Slide 9: What are Rotations -->
+        <div class="slide" data-slide="19">
+            <h1 class="slide-title">What are Rotations?</h1>
+            <div class="lemma-box">
+                <h4>Definition</h4>
+                <p><strong>Rotation</strong> is a local restructuring operation that maintains the BST property while changing the tree structure.</p>
+            </div>
+            
+            <ul class="properties-list">
+                <li><strong>Purpose:</strong> Used to fix RB-tree violations after insertion/deletion</li>
+                <li><strong>Key Property:</strong> BST order is maintained; only pointers change</li>
+                <li><strong>Time Complexity:</strong> O(1) - constant number of pointer changes</li>
+                <li><strong>Types:</strong> Left rotation and right rotation (mirror operations)</li>
+            </ul>
+            
+            <div style="margin: var(--space-32) 0;">
+                <h3 style="color: var(--color-primary); margin-bottom: var(--space-16); font-size: var(--font-size-xl);">Left Rotation</h3>
+                <div class="rotation-container">
+                    <svg width="150" height="150" viewBox="0 0 150 150">
+                        <line x1="75" y1="40" x2="105" y2="80" class="tree-line"/>
+                        <line x1="105" y1="80" x2="90" y2="115" class="tree-line"/>
+                        <circle cx="75" cy="40" r="20" class="node-black"/>
+                        <text x="75" y="40" class="node-text">x</text>
+                        <circle cx="105" cy="80" r="20" class="node-red"/>
+                        <text x="105" y="80" class="node-text">y</text>
+                        <circle cx="90" cy="115" r="15" class="nil-node"/>
+                        <text x="90" y="115" style="fill: white; font-size: 12px; text-anchor: middle;">β</text>
+                    </svg>
+                    <div class="rotation-arrow">→</div>
+                    <svg width="150" height="150" viewBox="0 0 150 150">
+                        <line x1="105" y1="40" x2="75" y2="80" class="tree-line"/>
+                        <line x1="75" y1="80" x2="90" y2="115" class="tree-line"/>
+                        <circle cx="105" cy="40" r="20" class="node-red"/>
+                        <text x="105" y="40" class="node-text">y</text>
+                        <circle cx="75" cy="80" r="20" class="node-black"/>
+                        <text x="75" y="80" class="node-text">x</text>
+                        <circle cx="90" cy="115" r="15" class="nil-node"/>
+                        <text x="90" y="115" style="fill: white; font-size: 12px; text-anchor: middle;">β</text>
+                    </svg>
+                </div>
+                <p style="text-align: center; color: var(--color-text-secondary); margin-top: var(--space-16);">Left Rotation on x: right child y moves up, y's left subtree β becomes x's right subtree</p>
+            </div>
+            
+            <div style="margin: var(--space-32) 0;">
+                <h3 style="color: var(--color-primary); margin-bottom: var(--space-16); font-size: var(--font-size-xl);">Right Rotation</h3>
+                <p style="text-align: center; color: var(--color-text-secondary);">Right Rotation on x: left child y moves up, y's right subtree becomes x's left subtree (mirror of left rotation)</p>
+            </div>
+        </div>
+
+        <!-- Slide 10: Left Rotation - Detailed -->
+        <div class="slide" data-slide="26">
+            <h1 class="slide-title">Left Rotation - Detailed</h1>
+            
+            <div class="split-view">
+                <div>
+                    <div class="code-header">CLRS Pseudocode</div>
+                    <div class="code-block">LEFT-ROTATE(T, x)
+  y = x.right
+  x.right = y.left
+  if y.left ≠ T.nil
+    y.left.p = x
+  y.p = x.p
+  if x.p == T.nil
+    T.root = y
+  elseif x == x.p.left
+    x.p.left = y
+  else
+    x.p.right = y
+  y.left = x
+  x.p = y</div>
+                </div>
+                <div>
+                    <div class="code-header">C++ Implementation</div>
+                    <div class="code-block">void leftRotate(Node* x) {
+  Node* y = x->right;
+  x->right = y->left;
+  
+  if (y->left != TNULL)
+    y->left->parent = x;
+  
+  y->parent = x->parent;
+  
+  if (x->parent == nullptr)
+    root = y;
+  else if (x == x->parent->left)
+    x->parent->left = y;
+  else
+    x->parent->right = y;
+  
+  y->left = x;
+  x->parent = y;
+}</div>
+                </div>
+            </div>
+            
+            <div class="key-point">
+                <strong>Step-by-step:</strong> y becomes x's right child → Move y's left subtree to x's right → Link y to x's parent → x becomes y's left child
+            </div>
+        </div>
+
+        <!-- Slide 11: Right Rotation -->
+        <div class="slide" data-slide="26">
+            <h1 class="slide-title">Right Rotation - Detailed</h1>
+            <p class="slide-content">Right rotation is the mirror image of left rotation (swap left/right):</p>
+            
+            <div class="split-view">
+                <div>
+                    <div class="code-header">CLRS Pseudocode</div>
+                    <div class="code-block">RIGHT-ROTATE(T, x)
+  y = x.left
+  x.left = y.right
+  if y.right ≠ T.nil
+    y.right.p = x
+  y.p = x.p
+  if x.p == T.nil
+    T.root = y
+  elseif x == x.p.right
+    x.p.right = y
+  else
+    x.p.left = y
+  y.right = x
+  x.p = y</div>
+                </div>
+                <div>
+                    <div class="code-header">C++ Implementation</div>
+                    <div class="code-block">void rightRotate(Node* x) {
+  Node* y = x->left;
+  x->left = y->right;
+  
+  if (y->right != TNULL)
+    y->right->parent = x;
+  
+  y->parent = x->parent;
+  
+  if (x->parent == nullptr)
+    root = y;
+  else if (x == x->parent->right)
+    x->parent->right = y;
+  else
+    x->parent->left = y;
+  
+  y->right = x;
+  x->parent = y;
+}</div>
+                </div>
+            </div>
+            
+            <div class="source-citation">
+                Reference: CLRS Chapter 13.2 - Rotations
+            </div>
+        </div>
+
+        <!-- Slide 12: Rotation Examples -->
+        <div class="slide" data-slide="12">
+            <h1 class="slide-title">Rotation Examples</h1>
+            <p class="slide-content"><strong>Concrete Example:</strong> Left rotation on specific tree</p>
+            
+            <div style="margin: var(--space-32) 0;">
+                <h3 style="color: var(--color-primary); margin-bottom: var(--space-16); font-size: var(--font-size-xl);">Left Rotation Example</h3>
+                <div class="rotation-container">
+                    <svg width="180" height="180" viewBox="0 0 180 180">
+                        <text x="90" y="20" style="fill: var(--color-text); font-size: 13px; text-anchor: middle; font-weight: bold;">Before</text>
+                        <line x1="70" y1="60" x2="50" y2="95" class="tree-line"/>
+                        <line x1="70" y1="60" x2="110" y2="95" class="tree-line"/>
+                        <line x1="110" y1="95" x2="90" y2="130" class="tree-line"/>
+                        <line x1="110" y1="95" x2="130" y2="130" class="tree-line"/>
+                        <circle cx="70" cy="60" r="20" class="node-black"/>
+                        <text x="70" y="60" class="node-text">x(5)</text>
+                        <circle cx="50" cy="95" r="18" class="nil-node"/>
+                        <text x="50" y="95" style="fill: white; font-size: 12px; text-anchor: middle;">α</text>
+                        <circle cx="110" cy="95" r="20" class="node-red"/>
+                        <text x="110" y="95" class="node-text">y(8)</text>
+                        <circle cx="90" cy="130" r="16" class="nil-node"/>
+                        <text x="90" y="130" style="fill: white; font-size: 11px; text-anchor: middle;">β</text>
+                        <circle cx="130" cy="130" r="16" class="nil-node"/>
+                        <text x="130" y="130" style="fill: white; font-size: 11px; text-anchor: middle;">γ</text>
+                    </svg>
+                    <div class="rotation-arrow">→</div>
+                    <svg width="180" height="180" viewBox="0 0 180 180">
+                        <text x="90" y="20" style="fill: var(--color-text); font-size: 13px; text-anchor: middle; font-weight: bold;">After</text>
+                        <line x1="110" y1="60" x2="70" y2="95" class="tree-line"/>
+                        <line x1="110" y1="60" x2="130" y2="95" class="tree-line"/>
+                        <line x1="70" y1="95" x2="50" y2="130" class="tree-line"/>
+                        <line x1="70" y1="95" x2="90" y2="130" class="tree-line"/>
+                        <circle cx="110" cy="60" r="20" class="node-red"/>
+                        <text x="110" y="60" class="node-text">y(8)</text>
+                        <circle cx="70" cy="95" r="20" class="node-black"/>
+                        <text x="70" y="95" class="node-text">x(5)</text>
+                        <circle cx="50" cy="130" r="16" class="nil-node"/>
+                        <text x="50" y="130" style="fill: white; font-size: 11px; text-anchor: middle;">α</text>
+                        <circle cx="90" cy="130" r="16" class="nil-node"/>
+                        <text x="90" y="130" style="fill: white; font-size: 11px; text-anchor: middle;">β</text>
+                        <circle cx="130" cy="95" r="18" class="nil-node"/>
+                        <text x="130" y="95" style="fill: white; font-size: 12px; text-anchor: middle;">γ</text>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <strong>Observe:</strong> BST property maintained! Inorder: α, 5, β, 8, γ (same before and after)
+            </div>
+        </div>
+
+        <!-- Slide 13: Insertion Overview - The Algorithm -->
+        <div class="slide" data-slide="6">
+            <h1 class="slide-title">Insertion Overview</h1>
+            <p class="slide-content">Always insert as <span style="color: #dc2626; font-weight: bold;">RED</span> because this is less likely to violate property 5 (black height). Only recolor/rotate as needed.</p>
+            <ul class="steps-list">
+                <li>Insert node as RED (like standard BST insertion)</li>
+                <li>Check for violations (red node with red parent)</li>
+                <li>Fix violations using recoloring and rotations</li>
+            </ul>
+            <div class="highlight-box">
+                <strong>Why insert as RED?</strong><br>
+                Inserting a red node doesn't change black heights on any path. We only have a problem if the parent is also red.
+            </div>
+            <div class="tree-container">
+                <svg width="400" height="200" viewBox="0 0 400 200">
+                    <text x="200" y="20" style="fill: var(--color-text); font-size: 14px; text-anchor: middle; font-weight: bold;">Insert 6 into tree</text>
+                    
+                    <line x1="200" y1="60" x2="150" y2="100" class="tree-line"/>
+                    <line x1="200" y1="60" x2="250" y2="100" class="tree-line"/>
+                    <line x1="150" y1="100" x2="125" y2="140" class="tree-line"/>
+                    
+                    <circle cx="200" cy="60" r="20" class="node-black"/>
+                    <text x="200" y="60" class="node-text">10</text>
+                    
+                    <circle cx="150" cy="100" r="20" class="node-black"/>
+                    <text x="150" y="100" class="node-text">5</text>
+                    
+                    <circle cx="250" cy="100" r="20" class="node-black"/>
+                    <text x="250" y="100" class="node-text">15</text>
+                    
+                    <circle cx="125" cy="140" r="20" class="node-red"/>
+                    <text x="125" y="140" class="node-text">6</text>
+                    
+                    <text x="125" y="175" style="fill: var(--color-primary); font-size: 12px; text-anchor: middle;">← New RED node</text>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Slide 14: RB-INSERT Pseudocode -->
+        <div class="slide" data-slide="14">
+            <h1 class="slide-title">RB-INSERT Pseudocode (CLRS)</h1>
+            
+            <div class="split-view">
+                <div>
+                    <div class="code-header">CLRS Pseudocode</div>
+                    <div class="code-block">RB-INSERT(T, z)
+  y = T.nil
+  x = T.root
+  while x ≠ T.nil
+    y = x
+    if z.key < x.key
+      x = x.left
+    else
+      x = x.right
+  
+  z.p = y
+  if y == T.nil
+    T.root = z
+  elseif z.key < y.key
+    y.left = z
+  else
+    y.right = z
+  
+  z.left = T.nil
+  z.right = T.nil
+  z.color = RED
+  RB-INSERT-FIXUP(T, z)</div>
+                </div>
+                <div>
+                    <div class="code-header">C++ Implementation</div>
+                    <div class="code-block">void insert(int key) {
+  Node* node = new Node(key);
+  node->left = TNULL;
+  node->right = TNULL;
+  node->color = RED;
+  
+  Node* y = nullptr;
+  Node* x = root;
+  
+  while (x != TNULL) {
+    y = x;
+    if (node->key < x->key)
+      x = x->left;
+    else
+      x = x->right;
+  }
+  
+  node->parent = y;
+  if (y == nullptr)
+    root = node;
+  else if (node->key < y->key)
+    y->left = node;
+  else
+    y->right = node;
+  
+  insertFix(node);
+}</div>
+                </div>
+            </div>
+            
+            <div class="source-citation">
+                Source: CLRS Chapter 13.3 - Insertion
+            </div>
+        </div>
+
+        <!-- Slide 15: RB-INSERT-FIXUP Overview -->
+        <div class="slide" data-slide="15">
+            <h1 class="slide-title">RB-INSERT-FIXUP Overview</h1>
+            <p class="slide-content"><strong>Problem:</strong> New red node might have red parent (violates property 4)</p>
+            <p class="slide-content"><strong>Solution:</strong> Walk up the tree fixing violations</p>
+            
+            <div class="lemma-box">
+                <h4>Key Variables in Fixup</h4>
+                <ul class="properties-list" style="font-size: var(--font-size-base);">
+                    <li><strong>z:</strong> current node being fixed (always red at start of iteration)</li>
+                    <li><strong>z.p:</strong> parent of z</li>
+                    <li><strong>z.p.p:</strong> grandparent of z</li>
+                    <li><strong>y:</strong> uncle of z (sibling of z.p)</li>
+                </ul>
+            </div>
+            
+            <div class="key-point">
+                <strong>Loop Invariant:</strong> At the start of each iteration, z is RED and z.p is RED (violation exists). We maintain all other RB properties.
+            </div>
+        </div>
+
+        <!-- Slide 16: Case Analysis Setup -->
+        <div class="slide" data-slide="16">
+            <h1 class="slide-title">Insertion - Case Analysis Setup</h1>
+            <p class="slide-content">Three main cases based on uncle's color and node position:</p>
+            
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h4 style="color: #dc2626;">Case 1</h4>
+                    <p><strong>Uncle is RED</strong></p>
+                    <p style="margin-top: var(--space-8);">Solution: Recolor</p>
+                </div>
+                <div class="comparison-card">
+                    <h4 style="color: var(--color-slate-900);">Case 2</h4>
+                    <p><strong>Uncle BLACK, Triangle</strong></p>
+                    <p style="margin-top: var(--space-8);">Solution: Rotate to line</p>
+                </div>
+                <div class="comparison-card">
+                    <h4 style="color: var(--color-slate-900);">Case 3</h4>
+                    <p><strong>Uncle BLACK, Line</strong></p>
+                    <p style="margin-top: var(--space-8);">Solution: Rotate & recolor</p>
+                </div>
+            </div>
+            
+            <div class="key-point">
+                <strong>Processing:</strong> The algorithm processes from z upward until:<br>
+                • We reach the root, OR<br>
+                • Case 3 terminates the loop (permanent fix)
+            </div>
+            
+            <div class="highlight-box">
+                Each case either fixes the violation or reduces it to another case. Case 1 may repeat O(log n) times. Cases 2 and 3 are terminal (at most one rotation each).
+            </div>
+        </div>
+
+        <!-- Slide 17: Insertion Case 1 -->
+        <div class="slide" data-slide="7">
+            <h1 class="slide-title">Insertion Case 1: Uncle is RED</h1>
+            <div class="case-box">
+                <h3>Scenario</h3>
+                <p>New red node has red parent and <strong style="color: #dc2626;">RED uncle</strong></p>
+                <h3 style="margin-top: var(--space-16);">Solution</h3>
+                <p><span class="step-indicator">1</span> Recolor parent → BLACK</p>
+                <p><span class="step-indicator">2</span> Recolor uncle → BLACK</p>
+                <p><span class="step-indicator">3</span> Recolor grandparent → RED</p>
+                <p><span class="step-indicator">4</span> Check grandparent for violations</p>
+            </div>
+            <p class="slide-content">This is the simplest case. We just change colors. Then check grandparent for violations.</p>
+            <div class="rotation-container" style="margin-top: var(--space-32);">
+                <svg width="200" height="200" viewBox="0 0 200 200">
+                    <text x="100" y="20" style="fill: var(--color-text); font-size: 13px; text-anchor: middle; font-weight: bold;">Before</text>
+                    <line x1="100" y1="60" x2="60" y2="100" class="tree-line"/>
+                    <line x1="100" y1="60" x2="140" y2="100" class="tree-line"/>
+                    <line x1="60" y1="100" x2="40" y2="140" class="tree-line"/>
+                    
+                    <circle cx="100" cy="60" r="20" class="node-black"/>
+                    <text x="100" y="60" class="node-text">G</text>
+                    
+                    <circle cx="60" cy="100" r="20" class="node-red"/>
+                    <text x="60" y="100" class="node-text">P</text>
+                    
+                    <circle cx="140" cy="100" r="20" class="node-red"/>
+                    <text x="140" y="100" class="node-text">U</text>
+                    
+                    <circle cx="40" cy="140" r="20" class="node-red"/>
+                    <text x="40" y="140" class="node-text">N</text>
+                    
+                    <text x="40" y="175" style="fill: var(--color-red-500); font-size: 11px; text-anchor: middle;">Violation!</text>
+                </svg>
+                <div class="rotation-arrow">→</div>
+                <svg width="200" height="200" viewBox="0 0 200 200">
+                    <text x="100" y="20" style="fill: var(--color-text); font-size: 13px; text-anchor: middle; font-weight: bold;">After Recoloring</text>
+                    <line x1="100" y1="60" x2="60" y2="100" class="tree-line"/>
+                    <line x1="100" y1="60" x2="140" y2="100" class="tree-line"/>
+                    <line x1="60" y1="100" x2="40" y2="140" class="tree-line"/>
+                    
+                    <circle cx="100" cy="60" r="20" class="node-red"/>
+                    <text x="100" y="60" class="node-text">G</text>
+                    
+                    <circle cx="60" cy="100" r="20" class="node-black"/>
+                    <text x="60" y="100" class="node-text">P</text>
+                    
+                    <circle cx="140" cy="100" r="20" class="node-black"/>
+                    <text x="140" y="100" class="node-text">U</text>
+                    
+                    <circle cx="40" cy="140" r="20" class="node-red"/>
+                    <text x="40" y="140" class="node-text">N</text>
+                    
+                    <text x="40" y="175" style="fill: var(--color-primary); font-size: 11px; text-anchor: middle;">Fixed!</text>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Slide 18: Insertion Case 2 -->
+        <div class="slide" data-slide="8">
+            <h1 class="slide-title">Insertion Case 2: Uncle is BLACK (Triangle)</h1>
+            <div class="case-box">
+                <h3>Scenario</h3>
+                <p>New red node, red parent, <strong>BLACK uncle</strong>. Node and parent form a triangle with grandparent.</p>
+                <h3 style="margin-top: var(--space-16);">Solution</h3>
+                <p>If node is right child of left-parent (or left child of right-parent), <strong>rotate to straighten the line</strong></p>
+            </div>
+            <p class="slide-content">This converts the problem to Case 3. We perform a rotation to transform the triangle into a line configuration.</p>
+            <div class="rotation-container" style="margin-top: var(--space-32);">
+                <svg width="180" height="200" viewBox="0 0 180 200">
+                    <text x="90" y="20" style="fill: var(--color-text); font-size: 13px; text-anchor: middle; font-weight: bold;">Triangle</text>
+                    <line x1="90" y1="60" x2="50" y2="100" class="tree-line"/>
+                    <line x1="90" y1="60" x2="130" y2="100" class="tree-line"/>
+                    <line x1="50" y1="100" x2="70" y2="140" class="tree-line"/>
+                    
+                    <circle cx="90" cy="60" r="20" class="node-black"/>
+                    <text x="90" y="60" class="node-text">G</text>
+                    
+                    <circle cx="50" cy="100" r="20" class="node-red"/>
+                    <text x="50" y="100" class="node-text">P</text>
+                    
+                    <circle cx="130" cy="100" r="18" class="node-black"/>
+                    <text x="130" y="100" class="node-text" style="font-size: 14px;">U</text>
+                    
+                    <circle cx="70" cy="140" r="20" class="node-red"/>
+                    <text x="70" y="140" class="node-text">N</text>
+                </svg>
+                <div class="rotation-arrow">→</div>
+                <svg width="180" height="200" viewBox="0 0 180 200">
+                    <text x="90" y="20" style="fill: var(--color-text); font-size: 13px; text-anchor: middle; font-weight: bold;">Line (Case 3)</text>
+                    <line x1="90" y1="60" x2="70" y2="100" class="tree-line"/>
+                    <line x1="90" y1="60" x2="130" y2="100" class="tree-line"/>
+                    <line x1="70" y1="100" x2="50" y2="140" class="tree-line"/>
+                    
+                    <circle cx="90" cy="60" r="20" class="node-black"/>
+                    <text x="90" y="60" class="node-text">G</text>
+                    
+                    <circle cx="70" cy="100" r="20" class="node-red"/>
+                    <text x="70" y="100" class="node-text">N</text>
+                    
+                    <circle cx="130" cy="100" r="18" class="node-black"/>
+                    <text x="130" y="100" class="node-text" style="font-size: 14px;">U</text>
+                    
+                    <circle cx="50" cy="140" r="20" class="node-red"/>
+                    <text x="50" y="140" class="node-text">P</text>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Slide 19: Insertion Case 3 -->
+        <div class="slide" data-slide="9">
+            <h1 class="slide-title">Insertion Case 3: Uncle is BLACK (Line)</h1>
+            <div class="case-box">
+                <h3>Scenario</h3>
+                <p>New red node, red parent, <strong>BLACK uncle</strong>. All form a straight line.</p>
+                <h3 style="margin-top: var(--space-16);">Solution</h3>
+                <p><span class="step-indicator">1</span> Rotate parent up to grandparent position</p>
+                <p><span class="step-indicator">2</span> Recolor: parent → BLACK, grandparent → RED</p>
+            </div>
+            <p class="slide-content">This fixes the violation permanently. Parent moves up to grandparent position and becomes black.</p>
+            <div class="rotation-container" style="margin-top: var(--space-32);">
+                <svg width="180" height="220" viewBox="0 0 180 220">
+                    <text x="90" y="20" style="fill: var(--color-text); font-size: 13px; text-anchor: middle; font-weight: bold;">Before</text>
+                    <line x1="90" y1="60" x2="50" y2="100" class="tree-line"/>
+                    <line x1="90" y1="60" x2="130" y2="100" class="tree-line"/>
+                    <line x1="50" y1="100" x2="30" y2="140" class="tree-line"/>
+                    
+                    <circle cx="90" cy="60" r="20" class="node-black"/>
+                    <text x="90" y="60" class="node-text">G</text>
+                    
+                    <circle cx="50" cy="100" r="20" class="node-red"/>
+                    <text x="50" y="100" class="node-text">P</text>
+                    
+                    <circle cx="130" cy="100" r="18" class="node-black"/>
+                    <text x="130" y="100" class="node-text" style="font-size: 14px;">U</text>
+                    
+                    <circle cx="30" cy="140" r="20" class="node-red"/>
+                    <text x="30" y="140" class="node-text">N</text>
+                    
+                    <text x="30" y="175" style="fill: var(--color-red-500); font-size: 11px; text-anchor: middle;">Violation!</text>
+                </svg>
+                <div class="rotation-arrow">→</div>
+                <svg width="180" height="220" viewBox="0 0 180 220">
+                    <text x="90" y="20" style="fill: var(--color-text); font-size: 13px; text-anchor: middle; font-weight: bold;">After</text>
+                    <line x1="70" y1="60" x2="30" y2="100" class="tree-line"/>
+                    <line x1="70" y1="60" x2="110" y2="100" class="tree-line"/>
+                    <line x1="110" y1="100" x2="130" y2="140" class="tree-line"/>
+                    
+                    <circle cx="70" cy="60" r="20" class="node-black"/>
+                    <text x="70" y="60" class="node-text">P</text>
+                    
+                    <circle cx="30" cy="100" r="20" class="node-red"/>
+                    <text x="30" y="100" class="node-text">N</text>
+                    
+                    <circle cx="110" cy="100" r="20" class="node-red"/>
+                    <text x="110" y="100" class="node-text">G</text>
+                    
+                    <circle cx="130" cy="140" r="18" class="node-black"/>
+                    <text x="130" y="140" class="node-text" style="font-size: 14px;">U</text>
+                    
+                    <text x="90" y="185" style="fill: var(--color-primary); font-size: 11px; text-anchor: middle;">Fixed! ✓</text>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Slide 20: Complete RB-INSERT-FIXUP Pseudocode -->
+        <div class="slide" data-slide="20">
+            <h1 class="slide-title">Complete RB-INSERT-FIXUP Pseudocode</h1>
+            
+            <div class="code-header">CLRS Complete Algorithm</div>
+            <div class="code-block" style="font-size: 11px;">RB-INSERT-FIXUP(T, z)
+  while z.p.color == RED
+    if z.p == z.p.p.left
+      y = z.p.p.right                    // y is uncle
+      
+      if y.color == RED                 // Case 1
+        z.p.color = BLACK
+        y.color = BLACK
+        z.p.p.color = RED
+        z = z.p.p
+      else
+        if z == z.p.right                // Case 2
+          z = z.p
+          LEFT-ROTATE(T, z)
+        
+        z.p.color = BLACK                // Case 3
+        z.p.p.color = RED
+        RIGHT-ROTATE(T, z.p.p)
+    
+    else                                 // Mirror cases (z.p is right child)
+      y = z.p.p.left
+      
+      if y.color == RED
+        z.p.color = BLACK
+        y.color = BLACK
+        z.p.p.color = RED
+        z = z.p.p
+      else
+        if z == z.p.left
+          z = z.p
+          RIGHT-ROTATE(T, z)
+        
+        z.p.color = BLACK
+        z.p.p.color = RED
+        LEFT-ROTATE(T, z.p.p)
+  
+  T.root.color = BLACK</div>
+            
+            <div class="source-citation">
+                Source: CLRS Chapter 13.3 - Complete algorithm with all cases
+            </div>
+        </div>
+
+        <!-- Slide 21-25: Insertion Examples -->
+        <div class="slide" data-slide="21">
+            <h1 class="slide-title">Insertion Example Part 1</h1>
+            <p class="slide-content"><strong>Start with empty tree, insert 7:</strong></p>
+            
+            <div class="example-sequence">
+                <div class="example-step">
+                    <div class="example-step-title">Initial</div>
+                    <svg width="100" height="80" viewBox="0 0 100 80">
+                        <text x="50" y="40" style="fill: var(--color-text-secondary); font-size: 14px; text-anchor: middle;">Empty tree</text>
+                    </svg>
+                </div>
+                <div class="example-step">
+                    <div class="example-step-title">Insert 7</div>
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="20" class="node-black"/>
+                        <text x="50" y="50" class="node-text">7</text>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="key-point">
+                <strong>Result:</strong> Node 7 becomes root, colored BLACK (Property 2)<br>
+                Tree: [7(B)] where B = BLACK
+            </div>
+        </div>
+
+        <div class="slide" data-slide="22">
+            <h1 class="slide-title">Insertion Example Part 2</h1>
+            <p class="slide-content"><strong>Insert 3 (left of 7):</strong></p>
+            
+            <div class="tree-container">
+                <svg width="200" height="150" viewBox="0 0 200 150">
+                    <line x1="100" y1="50" x2="70" y2="90" class="tree-line"/>
+                    <circle cx="100" cy="50" r="22" class="node-black"/>
+                    <text x="100" y="50" class="node-text">7</text>
+                    <circle cx="70" cy="90" r="22" class="node-red"/>
+                    <text x="70" y="90" class="node-text">3</text>
+                </svg>
+            </div>
+            
+            <div class="key-point">
+                <strong>Analysis:</strong><br>
+                • Node 3 inserted as RED, left child of 7<br>
+                • No violation: Parent 7 is BLACK<br>
+                • No fixup needed!<br>
+                Tree: [7(B) with left child 3(R)]
+            </div>
+        </div>
+
+        <div class="slide" data-slide="23">
+            <h1 class="slide-title">Insertion Example Part 3</h1>
+            <p class="slide-content"><strong>Insert 18 (right of 7):</strong></p>
+            
+            <div class="tree-container">
+                <svg width="250" height="150" viewBox="0 0 250 150">
+                    <line x1="125" y1="50" x2="85" y2="95" class="tree-line"/>
+                    <line x1="125" y1="50" x2="165" y2="95" class="tree-line"/>
+                    <circle cx="125" cy="50" r="22" class="node-black"/>
+                    <text x="125" y="50" class="node-text">7</text>
+                    <circle cx="85" cy="95" r="22" class="node-red"/>
+                    <text x="85" y="95" class="node-text">3</text>
+                    <circle cx="165" cy="95" r="22" class="node-red"/>
+                    <text x="165" y="95" class="node-text">18</text>
+                </svg>
+            </div>
+            
+            <div class="key-point">
+                <strong>Analysis:</strong><br>
+                • Node 18 inserted as RED, right child of 7<br>
+                • No violation: Parent 7 is BLACK<br>
+                • Perfect balance with two RED children!<br>
+                Tree: Balanced [7(B), 3(R), 18(R)]
+            </div>
+        </div>
+
+        <div class="slide" data-slide="24">
+            <h1 class="slide-title">Insertion Example Part 4 - With Fixup</h1>
+            <p class="slide-content"><strong>Insert 10 (left of 18, triggers Case 1):</strong></p>
+            
+            <div class="tree-container">
+                <svg width="500" height="220" viewBox="0 0 500 220">
+                    <text x="100" y="20" style="fill: var(--color-text); font-size: 13px; text-anchor: middle; font-weight: bold;">Before Fixup</text>
+                    <line x1="100" y1="60" x2="70" y2="100" class="tree-line"/>
+                    <line x1="100" y1="60" x2="130" y2="100" class="tree-line"/>
+                    <line x1="130" y1="100" x2="115" y2="140" class="tree-line"/>
+                    <circle cx="100" cy="60" r="20" class="node-black"/>
+                    <text x="100" y="60" class="node-text" style="font-size: 14px;">7</text>
+                    <circle cx="70" cy="100" r="20" class="node-red"/>
+                    <text x="70" y="100" class="node-text" style="font-size: 14px;">3</text>
+                    <circle cx="130" cy="100" r="20" class="node-red"/>
+                    <text x="130" y="100" class="node-text" style="font-size: 13px;">18</text>
+                    <circle cx="115" cy="140" r="20" class="node-red"/>
+                    <text x="115" y="140" class="node-text" style="font-size: 13px;">10</text>
+                    <text x="115" y="175" style="fill: var(--color-red-500); font-size: 12px; text-anchor: middle;">⚠️ RED-RED violation!</text>
+                    
+                    <text x="250" y="110" style="fill: var(--color-primary); font-size: 22px;">→</text>
+                    
+                    <text x="370" y="20" style="fill: var(--color-text); font-size: 13px; text-anchor: middle; font-weight: bold;">After Case 1</text>
+                    <line x1="370" y1="60" x2="340" y2="100" class="tree-line"/>
+                    <line x1="370" y1="60" x2="400" y2="100" class="tree-line"/>
+                    <line x1="400" y1="100" x2="385" y2="140" class="tree-line"/>
+                    <circle cx="370" cy="60" r="20" class="node-black"/>
+                    <text x="370" y="60" class="node-text" style="font-size: 14px;">7</text>
+                    <circle cx="340" cy="100" r="20" class="node-black"/>
+                    <text x="340" y="100" class="node-text" style="font-size: 14px;">3</text>
+                    <circle cx="400" cy="100" r="20" class="node-black"/>
+                    <text x="400" y="100" class="node-text" style="font-size: 13px;">18</text>
+                    <circle cx="385" cy="140" r="20" class="node-red"/>
+                    <text x="385" y="140" class="node-text" style="font-size: 13px;">10</text>
+                    <text x="370" y="185" style="fill: var(--color-primary); font-size: 12px; text-anchor: middle;">✓ Fixed!</text>
+                </svg>
+            </div>
+            
+            <div class="highlight-box">
+                <strong>Case 1 Applied:</strong> Uncle 3 is RED → Recolor parent 18 and uncle 3 to BLACK, grandparent 7 to RED. Since 7 is root, make it BLACK. Done!
+            </div>
+        </div>
+
+        <div class="slide" data-slide="25">
+            <h1 class="slide-title">Key Insights on Insertion</h1>
+            <ul class="properties-list">
+                <li><strong>Time complexity:</strong> O(log n) - at most O(log n) nodes visited in fixup loop</li>
+                <li><strong>Maximum rotations:</strong> At most 2 (one in Case 2, one in Case 3)</li>
+                <li><strong>Case progression:</strong> Case 2 always leads to Case 3, which terminates</li>
+                <li><strong>Why insert RED:</strong> Black-height property would be much harder to restore</li>
+            </ul>
+            
+            <div class="lemma-box">
+                <h4>Complexity Analysis</h4>
+                <p><strong>Each iteration:</strong> Either stops (Cases 2-3) or moves z up 2 levels (Case 1)</p>
+                <p style="margin-top: var(--space-12);"><strong>Maximum iterations:</strong> O(log n) because tree height is O(log n)</p>
+                <p style="margin-top: var(--space-12);"><strong>Total time:</strong> O(log n) iterations × O(1) per iteration = O(log n)</p>
+            </div>
+            
+            <div class="source-citation">
+                Reference: <a href="https://visualgo.net/en/bst" target="_blank" style="color: var(--color-primary);">VisualGo - Red-Black Tree Visualization</a>
+            </div>
+        </div>
+
+        <!-- Slide 10: Insertion Example -->
+        <div class="slide" data-slide="10">
+            <h1 class="slide-title">Insertion: Complete Example</h1>
+            <p class="slide-content">Watch how the tree self-balances as we insert values: <strong>7, 3, 18, 10, 22, 8</strong></p>
+            <div class="example-sequence">
+                <div class="example-step">
+                    <div class="example-step-title">Insert 7</div>
+                    <svg width="100" height="100" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="20" class="node-black"/>
+                        <text x="50" y="50" class="node-text">7</text>
+                        <text x="50" y="85" style="fill: var(--color-text-secondary); font-size: 11px; text-anchor: middle;">Root is black</text>
+                    </svg>
+                </div>
+                <div class="example-step">
+                    <div class="example-step-title">Insert 3</div>
+                    <svg width="120" height="110" viewBox="0 0 120 110">
+                        <line x1="60" y1="35" x2="40" y2="65" class="tree-line"/>
+                        <circle cx="60" cy="35" r="18" class="node-black"/>
+                        <text x="60" y="35" class="node-text" style="font-size: 14px;">7</text>
+                        <circle cx="40" cy="65" r="18" class="node-red"/>
+                        <text x="40" y="65" class="node-text" style="font-size: 14px;">3</text>
+                        <text x="60" y="95" style="fill: var(--color-text-secondary); font-size: 11px; text-anchor: middle;">Insert as red</text>
+                    </svg>
+                </div>
+                <div class="example-step">
+                    <div class="example-step-title">Insert 18</div>
+                    <svg width="140" height="110" viewBox="0 0 140 110">
+                        <line x1="70" y1="35" x2="45" y2="65" class="tree-line"/>
+                        <line x1="70" y1="35" x2="95" y2="65" class="tree-line"/>
+                        <circle cx="70" cy="35" r="18" class="node-black"/>
+                        <text x="70" y="35" class="node-text" style="font-size: 14px;">7</text>
+                        <circle cx="45" cy="65" r="18" class="node-red"/>
+                        <text x="45" y="65" class="node-text" style="font-size: 14px;">3</text>
+                        <circle cx="95" cy="65" r="18" class="node-red"/>
+                        <text x="95" y="65" class="node-text" style="font-size: 13px;">18</text>
+                        <text x="70" y="95" style="fill: var(--color-text-secondary); font-size: 11px; text-anchor: middle;">Valid RB tree</text>
+                    </svg>
+                </div>
+                <div class="example-step">
+                    <div class="example-step-title">Insert 10</div>
+                    <svg width="160" height="130" viewBox="0 0 160 130">
+                        <line x1="80" y1="30" x2="50" y2="60" class="tree-line"/>
+                        <line x1="80" y1="30" x2="110" y2="60" class="tree-line"/>
+                        <line x1="110" y1="60" x2="95" y2="90" class="tree-line"/>
+                        <circle cx="80" cy="30" r="18" class="node-black"/>
+                        <text x="80" y="30" class="node-text" style="font-size: 14px;">7</text>
+                        <circle cx="50" cy="60" r="18" class="node-black"/>
+                        <text x="50" y="60" class="node-text" style="font-size: 14px;">3</text>
+                        <circle cx="110" cy="60" r="18" class="node-black"/>
+                        <text x="110" y="60" class="node-text" style="font-size: 13px;">18</text>
+                        <circle cx="95" cy="90" r="18" class="node-red"/>
+                        <text x="95" y="90" class="node-text" style="font-size: 13px;">10</text>
+                        <text x="80" y="120" style="fill: var(--color-text-secondary); font-size: 10px; text-anchor: middle;">Case 1 applied</text>
+                    </svg>
+                </div>
+            </div>
+            <div class="highlight-box" style="margin-top: var(--space-24);">
+                Notice how colors change to maintain properties. Each insertion may trigger case handling, but the tree remains balanced!
+            </div>
+        </div>
+
+        <!-- Slide 26: Deletion Overview -->
+        <div class="slide" data-slide="11">
+            <h1 class="slide-title">Deletion Overview</h1>
+            <p class="slide-content">Deletion is more complex than insertion. When we delete a node, we might violate the black-height property.</p>
+            <ul class="steps-list">
+                <li>Perform standard BST deletion</li>
+                <li>If deleted node was BLACK, we have a problem</li>
+                <li>Handle the "Double Black" situation</li>
+                <li>Fix violations using rotations and recoloring</li>
+            </ul>
+            <div class="case-box">
+                <h3>The Double Black Concept</h3>
+                <p>When a black node is deleted, one path loses a black node. We mark the replacement node as "double black" - carrying an extra black to maintain the count.</p>
+                <p style="margin-top: var(--space-12);">We propagate this double-black mark up the tree until we can eliminate it through recoloring and rotations.</p>
+            </div>
+        </div>
+
+        <!-- Slides 27-45: Deletion, Analysis, Implementation -->
+        <div class="slide" data-slide="27">
+            <h1 class="slide-title">Node Transplant Operation</h1>
+            <p class="slide-content">Helper function used extensively in deletion:</p>
+            
+            <div class="split-view">
+                <div>
+                    <div class="code-header">CLRS Pseudocode</div>
+                    <div class="code-block">RB-TRANSPLANT(T, u, v)
+  if u.p == T.nil
+    T.root = v
+  elseif u == u.p.left
+    u.p.left = v
+  else
+    u.p.right = v
+  v.p = u.p</div>
+                </div>
+                <div>
+                    <div class="code-header">C++ Implementation</div>
+                    <div class="code-block">void rbTransplant(Node* u, Node* v) {
+  if (u->parent == nullptr)
+    root = v;
+  else if (u == u->parent->left)
+    u->parent->left = v;
+  else
+    u->parent->right = v;
+  
+  v->parent = u->parent;
+}</div>
+                </div>
+            </div>
+            
+            <div class="key-point">
+                <strong>Purpose:</strong> Replace subtree rooted at u with subtree rooted at v<br>
+                <strong>Note:</strong> Unlike BST transplant, always updates v.parent (even if v is T.nil)
+            </div>
+        </div>
+
+        <div class="slide" data-slide="28">
+            <h1 class="slide-title">RB-DELETE Pseudocode (Part 1)</h1>
+            
+            <div class="code-header">CLRS RB-DELETE Algorithm</div>
+            <div class="code-block" style="font-size: 11px;">RB-DELETE(T, z)
+  y = z
+  y-original-color = y.color
+  
+  if z.left == T.nil
+    x = z.right
+    RB-TRANSPLANT(T, z, z.right)
+  
+  elseif z.right == T.nil
+    x = z.left
+    RB-TRANSPLANT(T, z, z.left)
+  
+  else
+    y = TREE-MINIMUM(z.right)
+    y-original-color = y.color
+    x = y.right
+    
+    if y.p == z
+      x.p = y
+    else
+      RB-TRANSPLANT(T, y, y.right)
+      y.right = z.right
+      y.right.p = y
+    
+    RB-TRANSPLANT(T, z, y)
+    y.left = z.left
+    y.left.p = y
+    y.color = z.color
+  
+  if y-original-color == BLACK
+    RB-DELETE-FIXUP(T, x)</div>
+            
+            <div class="source-citation">
+                Source: CLRS Chapter 13.4 - Deletion
+            </div>
+        </div>
+
+        <div class="slide" data-slide="29">
+            <h1 class="slide-title">Understanding Double-Black</h1>
+            <p class="slide-content"><strong>The Core Problem:</strong> When we delete a BLACK node, we lose one black on some paths.</p>
+            
+            <div class="lemma-box">
+                <h4>The Double-Black Concept</h4>
+                <p>The property violation: Some paths now have fewer black nodes (violates Property 5).</p>
+                <p style="margin-top: var(--space-12);"><strong>Solution:</strong> Mark the replacement node as "double-black" - conceptually carrying an extra black.</p>
+                <p style="margin-top: var(--space-12);">This extra black is not a real color, but a marker that we need to redistribute or eliminate.</p>
+            </div>
+            
+            <div class="key-point">
+                <strong>Goal of RB-DELETE-FIXUP:</strong> Move this double-black up the tree until:<br>
+                1. It reaches the root (just remove the extra black), OR<br>
+                2. It combines with a RED node (turn RED+black to BLACK), OR<br>
+                3. We redistribute blacks through rotations and recoloring
+            </div>
+        </div>
+
+        <div class="slide" data-slide="30">
+            <h1 class="slide-title">RB-DELETE-FIXUP Overview</h1>
+            <p class="slide-content"><strong>Process:</strong> While x is not root and x is BLACK, apply cases based on sibling's configuration.</p>
+            
+            <ul class="properties-list">
+                <li><strong>Invariant:</strong> x has an extra black (double-black marker)</li>
+                <li><strong>Strategy:</strong> If sibling is RED, convert to case where sibling is BLACK</li>
+                <li><strong>Four Cases:</strong> Based on sibling's color and its children's colors</li>
+                <li><strong>Termination:</strong> Either x becomes root or we eliminate the extra black</li>
+            </ul>
+            
+            <div class="highlight-box">
+                Like insertion, deletion has symmetric cases for left/right. We'll show cases for when x is a left child; mirror for right child.
+            </div>
+        </div>
+
+        <div class="slide" data-slide="31">
+            <h1 class="slide-title">Deletion Case 1 - RED Sibling</h1>
+            <div class="case-box">
+                <h3>Setup</h3>
+                <p>Sibling w of x is <strong style="color: #dc2626;">RED</strong> (x's parent must be BLACK)</p>
+                <h3 style="margin-top: var(--space-16);">Solution</h3>
+                <p><span class="step-indicator">1</span> Recolor: w → BLACK, x.p → RED</p>
+                <p><span class="step-indicator">2</span> Rotate sibling w up (LEFT-ROTATE on x.p)</p>
+                <p><span class="step-indicator">3</span> Update w to be new sibling</p>
+                <p style="margin-top: var(--space-12);"><strong>Effect:</strong> Converts to case where sibling is BLACK</p>
+            </div>
+            
+            <div class="code-header">CLRS Pseudocode (Case 1)</div>
+            <div class="code-block">if w.color == RED
+  w.color = BLACK
+  x.p.color = RED
+  LEFT-ROTATE(T, x.p)
+  w = x.p.right</div>
+        </div>
+
+        <div class="slide" data-slide="32">
+            <h1 class="slide-title">Deletion Case 2 - BLACK Sibling, Both Children BLACK</h1>
+            <div class="case-box">
+                <h3>Setup</h3>
+                <p>Sibling w is BLACK, both w.left and w.right are BLACK</p>
+                <h3 style="margin-top: var(--space-16);">Solution</h3>
+                <p><span class="step-indicator">1</span> Recolor sibling w to RED</p>
+                <p><span class="step-indicator">2</span> Move double-black up to parent: x = x.p</p>
+                <p style="margin-top: var(--space-12);"><strong>Effect:</strong> Parent now carries the extra black; continue loop</p>
+            </div>
+            
+            <div class="code-header">CLRS Pseudocode (Case 2)</div>
+            <div class="code-block">if w.left.color == BLACK and w.right.color == BLACK
+  w.color = RED
+  x = x.p</div>
+            
+            <div class="key-point">
+                This is the only case that propagates the double-black upward. May repeat O(log n) times.
+            </div>
+        </div>
+
+        <div class="slide" data-slide="33">
+            <h1 class="slide-title">Deletion Case 3 - BLACK Sibling, Near Child RED</h1>
+            <div class="case-box">
+                <h3>Setup</h3>
+                <p>Sibling w is BLACK, w's near child (left) is RED, w's far child (right) is BLACK</p>
+                <h3 style="margin-top: var(--space-16);">Solution</h3>
+                <p><span class="step-indicator">1</span> Recolor: w.left → BLACK, w → RED</p>
+                <p><span class="step-indicator">2</span> RIGHT-ROTATE on w</p>
+                <p><span class="step-indicator">3</span> Update w to new sibling</p>
+                <p style="margin-top: var(--space-12);"><strong>Effect:</strong> Converts to Case 4</p>
+            </div>
+            
+            <div class="code-header">CLRS Pseudocode (Case 3)</div>
+            <div class="code-block">if w.right.color == BLACK
+  w.left.color = BLACK
+  w.color = RED
+  RIGHT-ROTATE(T, w)
+  w = x.p.right</div>
+        </div>
+
+        <div class="slide" data-slide="34">
+            <h1 class="slide-title">Deletion Case 4 - BLACK Sibling, Far Child RED</h1>
+            <div class="case-box">
+                <h3>Setup</h3>
+                <p>Sibling w is BLACK, w's far child (right) is RED</p>
+                <h3 style="margin-top: var(--space-16);">Solution</h3>
+                <p><span class="step-indicator">1</span> Recolor: w → x.p.color, x.p → BLACK, w.right → BLACK</p>
+                <p><span class="step-indicator">2</span> LEFT-ROTATE on x.p</p>
+                <p><span class="step-indicator">3</span> Set x = T.root to terminate loop</p>
+                <p style="margin-top: var(--space-12);"><strong>Effect:</strong> Eliminates the double-black permanently!</p>
+            </div>
+            
+            <div class="code-header">CLRS Pseudocode (Case 4)</div>
+            <div class="code-block">w.color = x.p.color
+x.p.color = BLACK
+w.right.color = BLACK
+LEFT-ROTATE(T, x.p)
+x = T.root  // Terminate loop</div>
+            
+            <div class="highlight-box">
+                <strong>This is the terminal case!</strong> After Case 4, the double-black is eliminated and the loop exits.
+            </div>
+        </div>
+
+        <div class="slide" data-slide="35">
+            <h1 class="slide-title">Complete RB-DELETE-FIXUP Pseudocode</h1>
+            
+            <div class="code-header">CLRS Complete Algorithm</div>
+            <div class="code-block" style="font-size: 10px;">RB-DELETE-FIXUP(T, x)
+  while x ≠ T.root and x.color == BLACK
+    if x == x.p.left
+      w = x.p.right
+      
+      if w.color == RED              // Case 1
+        w.color = BLACK
+        x.p.color = RED
+        LEFT-ROTATE(T, x.p)
+        w = x.p.right
+      
+      if w.left.color == BLACK and w.right.color == BLACK    // Case 2
+        w.color = RED
+        x = x.p
+      else
+        if w.right.color == BLACK    // Case 3
+          w.left.color = BLACK
+          w.color = RED
+          RIGHT-ROTATE(T, w)
+          w = x.p.right
+        
+        w.color = x.p.color          // Case 4
+        x.p.color = BLACK
+        w.right.color = BLACK
+        LEFT-ROTATE(T, x.p)
+        x = T.root
+    
+    else                             // Mirror cases (x is right child)
+      [symmetric with left/right swapped]
+  
+  x.color = BLACK</div>
+            
+            <div class="source-citation">
+                Source: CLRS Chapter 13.4 - Complete deletion fixup with all 4 cases
+            </div>
+        </div>
+
+        <div class="slide" data-slide="36">
+            <h1 class="slide-title">Deletion Example - Complete Walkthrough</h1>
+            <p class="slide-content"><strong>Example:</strong> Delete node 13 from a valid RB tree</p>
+            
+            <div class="tree-container">
+                <svg width="500" height="250" viewBox="0 0 500 250">
+                    <text x="120" y="20" style="fill: var(--color-text); font-size: 14px; text-anchor: middle; font-weight: bold;">Before Deletion</text>
+                    <line x1="120" y1="60" x2="70" y2="100" class="tree-line"/>
+                    <line x1="120" y1="60" x2="170" y2="100" class="tree-line"/>
+                    <line x1="70" y1="100" x2="45" y2="140" class="tree-line"/>
+                    <line x1="70" y1="100" x2="95" y2="140" class="tree-line"/>
+                    <line x1="170" y1="100" x2="145" y2="140" class="tree-line"/>
+                    <line x1="170" y1="100" x2="195" y2="140" class="tree-line"/>
+                    
+                    <circle cx="120" cy="60" r="22" class="node-black"/>
+                    <text x="120" y="60" class="node-text">13</text>
+                    <circle cx="70" cy="100" r="20" class="node-red"/>
+                    <text x="70" y="100" class="node-text" style="font-size: 14px;">8</text>
+                    <circle cx="170" cy="100" r="20" class="node-black"/>
+                    <text x="170" y="100" class="node-text" style="font-size: 14px;">17</text>
+                    <circle cx="45" cy="140" r="18" class="node-black"/>
+                    <text x="45" y="140" class="node-text" style="font-size: 13px;">1</text>
+                    <circle cx="95" cy="140" r="18" class="node-black"/>
+                    <text x="95" y="140" class="node-text" style="font-size: 13px;">11</text>
+                    <circle cx="145" cy="140" r="18" class="node-black"/>
+                    <text x="145" y="140" class="node-text" style="font-size: 13px;">15</text>
+                    <circle cx="195" cy="140" r="18" class="node-black"/>
+                    <text x="195" y="140" class="node-text" style="font-size: 13px;">25</text>
+                    
+                    <text x="300" y="110" style="fill: var(--color-primary); font-size: 24px;">→</text>
+                    
+                    <text x="390" y="20" style="fill: var(--color-text); font-size: 14px; text-anchor: middle; font-weight: bold;">After Deletion</text>
+                    <line x1="390" y1="60" x2="345" y2="100" class="tree-line"/>
+                    <line x1="390" y1="60" x2="435" y2="100" class="tree-line"/>
+                    <line x1="345" y1="100" x2="320" y2="140" class="tree-line"/>
+                    <line x1="345" y1="100" x2="370" y2="140" class="tree-line"/>
+                    <line x1="435" y1="100" x2="460" y2="140" class="tree-line"/>
+                    
+                    <circle cx="390" cy="60" r="22" class="node-black"/>
+                    <text x="390" y="60" class="node-text">15</text>
+                    <circle cx="345" cy="100" r="20" class="node-red"/>
+                    <text x="345" y="100" class="node-text" style="font-size: 14px;">8</text>
+                    <circle cx="435" cy="100" r="20" class="node-black"/>
+                    <text x="435" y="100" class="node-text" style="font-size: 14px;">17</text>
+                    <circle cx="320" cy="140" r="18" class="node-black"/>
+                    <text x="320" y="140" class="node-text" style="font-size: 13px;">1</text>
+                    <circle cx="370" cy="140" r="18" class="node-black"/>
+                    <text x="370" y="140" class="node-text" style="font-size: 13px;">11</text>
+                    <circle cx="460" cy="140" r="18" class="node-black"/>
+                    <text x="460" y="140" class="node-text" style="font-size: 13px;">25</text>
+                </svg>
+            </div>
+            
+            <div class="key-point">
+                <strong>Analysis:</strong> Node 13 deleted, successor 15 promoted. Black node deleted but tree structure allows fixup through case handling. All RB properties maintained!
+            </div>
+        </div>
+
+        <!-- Slide 37-42: Analysis & Applications -->
+        <div class="slide" data-slide="37">
+            <h1 class="slide-title">Time Complexity Analysis</h1>
+            <table class="complexity-table">
+                <thead>
+                    <tr>
+                        <th>Operation</th>
+                        <th>Time Complexity</th>
+                        <th>Detailed Explanation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Search</strong></td>
+                        <td>O(log n)</td>
+                        <td>Height is O(log n), standard BST search</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Insertion</strong></td>
+                        <td>O(log n)</td>
+                        <td>BST insert O(log n) + fixup O(log n), at most 2 rotations</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Deletion</strong></td>
+                        <td>O(log n)</td>
+                        <td>BST delete O(log n) + fixup O(log n), at most 3 rotations</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Space</strong></td>
+                        <td>O(n)</td>
+                        <td>One extra bit per node for color + parent pointer</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="lemma-box" style="margin-top: var(--space-24);">
+                <h4>Height Guarantee Proof</h4>
+                <p><strong>Theorem:</strong> A red-black tree with n internal nodes has height h ≤ 2·lg(n+1)</p>
+                <p style="margin-top: var(--space-12);"><strong>Proof sketch:</strong></p>
+                <ul style="margin-left: var(--space-24); margin-top: var(--space-8);">
+                    <li>Let bh = black-height of root</li>
+                    <li>By Property 5, all paths have bh black nodes</li>
+                    <li>By Property 4, at most h/2 red nodes on any path</li>
+                    <li>Therefore: bh ≥ h/2, so h ≤ 2·bh ≤ 2·lg(n+1)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide" data-slide="38">
+            <h1 class="slide-title">Why RB-Trees over AVL?</h1>
+            
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h4 style="color: var(--color-primary);">RB Trees</h4>
+                    <p><strong>Balance:</strong> h ≤ 2·lg(n+1)</p>
+                    <p><strong>Insert rotations:</strong> ≤2</p>
+                    <p><strong>Delete rotations:</strong> ≤3</p>
+                    <p style="margin-top: var(--space-12); color: var(--color-primary);"><strong>Best for:</strong> Frequent updates</p>
+                </div>
+                <div class="comparison-card">
+                    <h4>AVL Trees</h4>
+                    <p><strong>Balance:</strong> h ≤ 1.44·lg(n)</p>
+                    <p><strong>Insert rotations:</strong> O(log n)</p>
+                    <p><strong>Delete rotations:</strong> O(log n)</p>
+                    <p style="margin-top: var(--space-12); color: var(--color-text-secondary);"><strong>Best for:</strong> Search-heavy workloads</p>
+                </div>
+                <div></div>
+            </div>
+            
+            <div class="highlight-box" style="margin-top: var(--space-24);">
+                <strong>Conclusion:</strong> RB trees sacrifice slightly more height (looser balance) for significantly fewer rotations during updates. This makes them ideal for databases, file systems, and containers where insertions/deletions are frequent.
+            </div>
+        </div>
+
+        <div class="slide" data-slide="39">
+            <h1 class="slide-title">Real-World Applications</h1>
+            <div class="applications-grid">
+                <div class="application-card">
+                    <strong style="color: var(--color-primary); font-size: var(--font-size-xl);">Java Standard Library</strong>
+                    <p style="margin-top: var(--space-8);"><code>java.util.TreeMap</code></p>
+                    <p><code>java.util.TreeSet</code></p>
+                    <p style="margin-top: var(--space-8); color: var(--color-text-secondary);">Sorted key-value storage with guaranteed O(log n) operations</p>
+                </div>
+                <div class="application-card">
+                    <strong style="color: var(--color-primary); font-size: var(--font-size-xl);">C++ STL</strong>
+                    <p style="margin-top: var(--space-8);"><code>std::map</code>, <code>std::set</code></p>
+                    <p><code>std::multimap</code>, <code>std::multiset</code></p>
+                    <p style="margin-top: var(--space-8); color: var(--color-text-secondary);">Associative containers in C++ Standard Template Library</p>
+                </div>
+                <div class="application-card">
+                    <strong style="color: var(--color-primary); font-size: var(--font-size-xl);">Linux Kernel</strong>
+                    <p style="margin-top: var(--space-8);">CFS Scheduler</p>
+                    <p style="margin-top: var(--space-8); color: var(--color-text-secondary);">Completely Fair Scheduler uses RB trees to manage process scheduling with O(log n) task selection</p>
+                </div>
+                <div class="application-card">
+                    <strong style="color: var(--color-primary); font-size: var(--font-size-xl);">Database Systems</strong>
+                    <p style="margin-top: var(--space-8);">B+ Tree Indexing</p>
+                    <p style="margin-top: var(--space-8); color: var(--color-text-secondary);">Many databases use RB tree variants for in-memory indexing and maintaining sorted data</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Implementation slides 40-45 -->
+        <div class="slide" data-slide="40">
+            <h1 class="slide-title">Summary &amp; Key Takeaways</h1>
+            <ul class="properties-list">
+                <li><strong>RB trees maintain balance</strong> through 5 color properties that prevent skew</li>
+                <li><strong>Height guarantee:</strong> h ≤ 2·lg(n+1) ensures O(log n) operations</li>
+                <li><strong>Insertion:</strong> At most 2 rotations, uses 3 cases based on uncle's color</li>
+                <li><strong>Deletion:</strong> At most 3 rotations, uses 4 cases based on sibling configuration</li>
+                <li><strong>Industry standard:</strong> Used in Java, C++, Linux for guaranteed performance</li>
+            </ul>
+            
+            <div class="highlight-box" style="margin-top: var(--space-24);">
+                <strong style="font-size: var(--font-size-xl);">Master the fundamentals:</strong><br><br>
+                Understand the 5 properties • Practice case identification • Trace insertions and deletions step-by-step • Recognize when to apply rotations vs. recoloring
+            </div>
+        </div>
+
+        <div class="slide" data-slide="41">
+            <h1 class="slide-title">Complete C++ Node Structure</h1>
+            
+            <div class="code-header">Complete Node and Tree Class</div>
+            <div class="code-block" style="font-size: 11px;">#include <iostream>
+using namespace std;
+
+enum Color { BLACK = 0, RED = 1 };
+
+struct Node {
+    int key;
+    Node* parent;
+    Node* left;
+    Node* right;
+    int color;
+    
+    Node(int k) : key(k), parent(nullptr), 
+                  left(nullptr), right(nullptr), 
+                  color(RED) {}
+};
+
+class RedBlackTree {
+private:
+    Node* root;
+    Node* TNULL;  // Sentinel NIL
+    
+    void leftRotate(Node* x);
+    void rightRotate(Node* x);
+    void insertFix(Node* k);
+    void deleteFix(Node* x);
+    void rbTransplant(Node* u, Node* v);
+    Node* minimum(Node* node);
+    void deleteNodeHelper(Node* node, int key);
+    
+public:
+    RedBlackTree();
+    void insert(int key);
+    void deleteNode(int key);
+    Node* search(int key);
+};</div>
+            
+            <div class="source-citation">
+                Reference: <a href="https://www.programiz.com/dsa/red-black-tree" target="_blank" style="color: var(--color-primary);">Programiz - Complete RB Tree Implementation</a>
+            </div>
+        </div>
+
+        <div class="slide" data-slide="42">
+            <h1 class="slide-title">Complete C++ Implementation - Constructor &amp; Helpers</h1>
+            
+            <div class="code-header">Constructor and Helper Methods</div>
+            <div class="code-block" style="font-size: 11px;">RedBlackTree::RedBlackTree() {
+    TNULL = new Node(0);
+    TNULL->color = BLACK;
+    TNULL->left = nullptr;
+    TNULL->right = nullptr;
+    TNULL->parent = nullptr;
+    root = TNULL;
+}
+
+Node* RedBlackTree::minimum(Node* node) {
+    while (node->left != TNULL)
+        node = node->left;
+    return node;
+}
+
+Node* RedBlackTree::search(int key) {
+    Node* curr = root;
+    while (curr != TNULL) {
+        if (key == curr->key)
+            return curr;
+        else if (key < curr->key)
+            curr = curr->left;
+        else
+            curr = curr->right;
+    }
+    return nullptr;  // Not found
+}</div>
+            
+            <div class="key-point">
+                <strong>Note:</strong> All operations must use TNULL instead of nullptr for leaf nodes. This simplifies boundary condition handling.
+            </div>
+        </div>
+
+        <div class="slide" data-slide="43">
+            <h1 class="slide-title">Complete insertFix Implementation</h1>
+            
+            <div class="code-header">C++ insertFix Method</div>
+            <div class="code-block" style="font-size: 10px;">void RedBlackTree::insertFix(Node* k) {
+    Node* u;
+    while (k->parent->color == RED) {
+        if (k->parent == k->parent->parent->left) {
+            u = k->parent->parent->right;  // Uncle
+            
+            if (u->color == RED) {         // Case 1
+                k->parent->color = BLACK;
+                u->color = BLACK;
+                k->parent->parent->color = RED;
+                k = k->parent->parent;
+            } else {
+                if (k == k->parent->right) { // Case 2
+                    k = k->parent;
+                    leftRotate(k);
+                }
+                k->parent->color = BLACK;    // Case 3
+                k->parent->parent->color = RED;
+                rightRotate(k->parent->parent);
+            }
+        } else {  // Mirror cases
+            u = k->parent->parent->left;
+            
+            if (u->color == RED) {
+                k->parent->color = BLACK;
+                u->color = BLACK;
+                k->parent->parent->color = RED;
+                k = k->parent->parent;
+            } else {
+                if (k == k->parent->left) {
+                    k = k->parent;
+                    rightRotate(k);
+                }
+                k->parent->color = BLACK;
+                k->parent->parent->color = RED;
+                leftRotate(k->parent->parent);
+            }
+        }
+        if (k == root) break;
+    }
+    root->color = BLACK;
+}</div>
+        </div>
+
+        <div class="slide" data-slide="44">
+            <h1 class="slide-title">Common Mistakes to Avoid</h1>
+            <ul class="properties-list">
+                <li><strong>Forgetting to update parent pointers</strong> after rotation - causes dangling pointers</li>
+                <li><strong>Not handling TNULL properly</strong> in conditions - check for TNULL, not nullptr</li>
+                <li><strong>Incorrect case analysis in fixup</strong> - missing some scenarios or wrong conditions</li>
+                <li><strong>Updating color but forgetting structure changes</strong> - rotations must accompany recoloring</li>
+                <li><strong>Not handling root specially</strong> - root has no parent, special case needed</li>
+            </ul>
+            
+            <div class="case-box" style="margin-top: var(--space-24);">
+                <h3>Example: Correct vs Incorrect Rotation</h3>
+                <div class="split-view" style="margin-top: var(--space-16);">
+                    <div>
+                        <div class="code-header">CORRECT</div>
+                        <div class="code-block" style="font-size: 11px;">void leftRotate(Node* x) {
+  Node* y = x->right;
+  x->right = y->left;
+  if (y->left != TNULL)
+    y->left->parent = x;  // ✓
+  y->parent = x->parent;
+  // ... rest of code
+}</div>
+                    </div>
+                    <div>
+                        <div class="code-header">WRONG</div>
+                        <div class="code-block" style="font-size: 11px;">void leftRotateWrong(Node* x) {
+  Node* y = x->right;
+  x->right = y->left;
+  // Missing parent update!
+  // ✗ BUG: dangling pointer
+  y->parent = x->parent;
+  // ... rest of code
+}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide" data-slide="45">
+            <h1 class="slide-title">Testing Your Implementation &amp; Resources</h1>
+            
+            <div class="lemma-box">
+                <h4>Test Cases to Verify Correctness</h4>
+                <ul class="properties-list" style="font-size: var(--font-size-base);">
+                    <li>Insert single node → verify it's root and BLACK</li>
+                    <li>Insert two nodes → verify balance and colors</li>
+                    <li>Insert n nodes in ascending order → verify height is O(log n)</li>
+                    <li>Delete from single node → verify tree is empty</li>
+                    <li>Delete root → verify new root is BLACK</li>
+                    <li>Verify all 5 properties after each operation</li>
+                    <li>Stress test with random insertions/deletions (1000+ operations)</li>
+                </ul>
+            </div>
+            
+            <div class="applications-grid" style="margin-top: var(--space-24);">
+                <div class="application-card">
+                    <strong style="color: var(--color-primary);">CLRS Textbook</strong>
+                    <p style="margin-top: var(--space-8);">"Introduction to Algorithms" Chapter 13</p>
+                    <p style="margin-top: var(--space-8); font-size: var(--font-size-base);">Authoritative source with complete proofs</p>
+                </div>
+                <div class="application-card">
+                    <strong style="color: var(--color-primary);">Programiz</strong>
+                    <p style="margin-top: var(--space-8);"><a href="https://www.programiz.com/dsa/red-black-tree" target="_blank" style="color: var(--color-primary);">RB Tree Tutorial</a></p>
+                    <p style="margin-top: var(--space-8); font-size: var(--font-size-base);">Complete C++ implementation with examples</p>
+                </div>
+                <div class="application-card">
+                    <strong style="color: var(--color-primary);">VisualGo</strong>
+                    <p style="margin-top: var(--space-8);"><a href="https://visualgo.net/en/bst" target="_blank" style="color: var(--color-primary);">Interactive Visualization</a></p>
+                    <p style="margin-top: var(--space-8); font-size: var(--font-size-base);">Step-by-step visual animations of operations</p>
+                </div>
+                <div class="application-card">
+                    <strong style="color: var(--color-primary);">GeeksforGeeks</strong>
+                    <p style="margin-top: var(--space-8);"><a href="https://www.geeksforgeeks.org/red-black-tree-set-1-introduction-2/" target="_blank" style="color: var(--color-primary);">RB Tree Articles</a></p>
+                    <p style="margin-top: var(--space-8); font-size: var(--font-size-base);">Multiple articles with code and explanations</p>
+                </div>
+            </div>
+            
+            <div class="highlight-box" style="margin-top: var(--space-24);">
+                <strong style="font-size: var(--font-size-xl);">Practice makes perfect!</strong><br><br>
+                Implement RB trees from scratch • Trace each case manually • Use visualizers to verify • Test with edge cases
+            </div>
+        </div>
+
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <button class="nav-button" id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
+            <div class="slide-counter">
+                <span id="currentSlide">1</span> / <span id="totalSlides">20</span>
+            </div>
+            <button class="nav-button" id="nextBtn" onclick="changeSlide(1)">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlideIndex = 1;
+        const totalSlides = 45;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            if (n > totalSlides) {
+                currentSlideIndex = totalSlides;
+            } else if (n < 1) {
+                currentSlideIndex = 1;
+            } else {
+                currentSlideIndex = n;
+            }
+            
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                if (index + 1 === currentSlideIndex) {
+                    slide.classList.add('active');
+                }
+            });
+            
+            document.getElementById('currentSlide').textContent = currentSlideIndex;
+            document.getElementById('totalSlides').textContent = totalSlides;
+            
+            prevBtn.disabled = currentSlideIndex === 1;
+            nextBtn.disabled = currentSlideIndex === totalSlides;
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlideIndex + direction);
+        }
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowRight') {
+                changeSlide(1);
+            } else if (event.key === 'ArrowLeft') {
+                changeSlide(-1);
+            }
+        });
+
+        showSlide(1);
+    </script>
+</body>
+</html>

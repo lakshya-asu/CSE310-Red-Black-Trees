@@ -1884,58 +1884,87 @@ x = T.root  // Terminate loop</div>
             <h1 class="slide-title">Deletion Example - Complete Walkthrough</h1>
             <p class="slide-content"><strong>Example:</strong> Delete node 13 from a valid RB tree</p>
             
-            <div class="tree-container">
-                <svg width="500" height="250" viewBox="0 0 500 250">
-                    <text x="120" y="20" style="fill: var(--color-text); font-size: 14px; text-anchor: middle; font-weight: bold;">Before Deletion</text>
-                    <line x1="120" y1="60" x2="70" y2="100" class="tree-line"/>
-                    <line x1="120" y1="60" x2="170" y2="100" class="tree-line"/>
-                    <line x1="70" y1="100" x2="45" y2="140" class="tree-line"/>
-                    <line x1="70" y1="100" x2="95" y2="140" class="tree-line"/>
-                    <line x1="170" y1="100" x2="145" y2="140" class="tree-line"/>
-                    <line x1="170" y1="100" x2="195" y2="140" class="tree-line"/>
-                    
-                    <circle cx="120" cy="60" r="22" class="node-black"/>
-                    <text x="120" y="60" class="node-text">13</text>
-                    <circle cx="70" cy="100" r="20" class="node-red"/>
-                    <text x="70" y="100" class="node-text" style="font-size: 14px;">8</text>
-                    <circle cx="170" cy="100" r="20" class="node-black"/>
-                    <text x="170" y="100" class="node-text" style="font-size: 14px;">17</text>
-                    <circle cx="45" cy="140" r="18" class="node-black"/>
-                    <text x="45" y="140" class="node-text" style="font-size: 13px;">1</text>
-                    <circle cx="95" cy="140" r="18" class="node-black"/>
-                    <text x="95" y="140" class="node-text" style="font-size: 13px;">11</text>
-                    <circle cx="145" cy="140" r="18" class="node-black"/>
-                    <text x="145" y="140" class="node-text" style="font-size: 13px;">15</text>
-                    <circle cx="195" cy="140" r="18" class="node-black"/>
-                    <text x="195" y="140" class="node-text" style="font-size: 13px;">25</text>
-                    
-                    <text x="300" y="110" style="fill: var(--color-primary); font-size: 24px;">→</text>
-                    
-                    <text x="390" y="20" style="fill: var(--color-text); font-size: 14px; text-anchor: middle; font-weight: bold;">After Deletion</text>
-                    <line x1="390" y1="60" x2="345" y2="100" class="tree-line"/>
-                    <line x1="390" y1="60" x2="435" y2="100" class="tree-line"/>
-                    <line x1="345" y1="100" x2="320" y2="140" class="tree-line"/>
-                    <line x1="345" y1="100" x2="370" y2="140" class="tree-line"/>
-                    <line x1="435" y1="100" x2="460" y2="140" class="tree-line"/>
-                    
-                    <circle cx="390" cy="60" r="22" class="node-black"/>
-                    <text x="390" y="60" class="node-text">15</text>
-                    <circle cx="345" cy="100" r="20" class="node-red"/>
-                    <text x="345" y="100" class="node-text" style="font-size: 14px;">8</text>
-                    <circle cx="435" cy="100" r="20" class="node-black"/>
-                    <text x="435" y="100" class="node-text" style="font-size: 14px;">17</text>
-                    <circle cx="320" cy="140" r="18" class="node-black"/>
-                    <text x="320" y="140" class="node-text" style="font-size: 13px;">1</text>
-                    <circle cx="370" cy="140" r="18" class="node-black"/>
-                    <text x="370" y="140" class="node-text" style="font-size: 13px;">11</text>
-                    <circle cx="460" cy="140" r="18" class="node-black"/>
-                    <text x="460" y="140" class="node-text" style="font-size: 13px;">25</text>
-                </svg>
-            </div>
-            
-            <div class="key-point">
-                <strong>Analysis:</strong> Node 13 deleted, successor 15 promoted. Black node deleted but tree structure allows fixup through case handling. All RB properties maintained!
-            </div>
+           <div class="tree-container">
+    <svg width="500" height="250" viewBox="0 0 500 250">
+        <!-- Before Deletion -->
+        <text x="120" y="20"
+              style="fill: var(--color-text); font-size: 14px; text-anchor: middle; font-weight: bold;">
+            Before Deletion
+        </text>
+
+        <!-- Edges -->
+        <line x1="120" y1="60" x2="70"  y2="100" class="tree-line"/>
+        <line x1="120" y1="60" x2="170" y2="100" class="tree-line"/>
+        <line x1="70"  y1="100" x2="45"  y2="140" class="tree-line"/>
+        <line x1="70"  y1="100" x2="95"  y2="140" class="tree-line"/>
+        <line x1="170" y1="100" x2="145" y2="140" class="tree-line"/>
+        <line x1="170" y1="100" x2="195" y2="140" class="tree-line"/>
+
+        <!-- Nodes BEFORE -->
+        <circle cx="120" cy="60"  r="22" class="node-black"/>
+        <text   x="120" y="60" class="node-text">13</text>
+
+        <circle cx="70"  cy="100" r="20" class="node-red"/>
+        <text   x="70"  y="100" class="node-text" style="font-size: 14px;">8</text>
+
+        <!-- 17 should be RED to make the tree valid -->
+        <circle cx="170" cy="100" r="20" class="node-red"/>
+        <text   x="170" y="100" class="node-text" style="font-size: 14px;">17</text>
+
+        <circle cx="45"  cy="140" r="18" class="node-black"/>
+        <text   x="45"  y="140" class="node-text" style="font-size: 13px;">1</text>
+
+        <circle cx="95"  cy="140" r="18" class="node-black"/>
+        <text   x="95"  y="140" class="node-text" style="font-size: 13px;">11</text>
+
+        <circle cx="145" cy="140" r="18" class="node-black"/>
+        <text   x="145" y="140" class="node-text" style="font-size: 13px;">15</text>
+
+        <circle cx="195" cy="140" r="18" class="node-black"/>
+        <text   x="195" y="140" class="node-text" style="font-size: 13px;">25</text>
+
+        <!-- Arrow -->
+        <text x="300" y="110" style="fill: var(--color-primary); font-size: 24px;">→</text>
+
+        <!-- After Deletion -->
+        <text x="390" y="20"
+              style="fill: var(--color-text); font-size: 14px; text-anchor: middle; font-weight: bold;">
+            After Deletion
+        </text>
+
+        <!-- Edges AFTER -->
+        <line x1="390" y1="60" x2="345" y2="100" class="tree-line"/>
+        <line x1="390" y1="60" x2="435" y2="100" class="tree-line"/>
+        <line x1="345" y1="100" x2="320" y2="140" class="tree-line"/>
+        <line x1="345" y1="100" x2="370" y2="140" class="tree-line"/>
+        <line x1="435" y1="100" x2="460" y2="140" class="tree-line"/>
+
+        <!-- Nodes AFTER: 13 removed, 15 promoted -->
+        <circle cx="390" cy="60"  r="22" class="node-black"/>
+        <text   x="390" y="60" class="node-text">15</text>
+
+        <circle cx="345" cy="100" r="20" class="node-red"/>
+        <text   x="345" y="100" class="node-text" style="font-size: 14px;">8</text>
+
+        <!-- 17 also RED here to keep black-height consistent -->
+        <circle cx="435" cy="100" r="20" class="node-red"/>
+        <text   x="435" y="100" class="node-text" style="font-size: 14px;">17</text>
+
+        <circle cx="320" cy="140" r="18" class="node-black"/>
+        <text   x="320" y="140" class="node-text" style="font-size: 13px;">1</text>
+
+        <circle cx="370" cy="140" r="18" class="node-black"/>
+        <text   x="370" y="140" class="node-text" style="font-size: 13px;">11</text>
+
+        <circle cx="460" cy="140" r="18" class="node-black"/>
+        <text   x="460" y="140" class="node-text" style="font-size: 13px;">25</text>
+    </svg>
+</div>
+
+<div class="key-point">
+    <strong>Analysis:</strong> Node 13 deleted, successor 15 promoted. Black node deleted, but after fixup the RB properties are still satisfied.
+</div>
+
         </div>
 
         <!-- Slide 37-42: Analysis & Applications -->
